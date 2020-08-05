@@ -1,0 +1,15 @@
+7
+{"name":"Input", "shape":"[5]"}
+{"name":"Input", "shape":"[6]"}
+{"name":"Dense", "units":"30", "activation":"'relu'"}
+{"name":"Dense", "units":"30", "activation":"'relu'"}
+{"name":"Concatenate"}
+{"name":"Dense", "units":"1"}
+{"name":"Dense", "units":"1"}
+6
+0 4
+1 2
+2 3
+3 4
+4 5
+3 6
