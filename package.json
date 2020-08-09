@@ -22,7 +22,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint src --ext ts,tsx --fix",
     "prettier": "prettier src --write --loglevel=warn",
-    "test-graph": "ts-node src/graph2tf/graph2tf.ts"
+    "test-graph": "ts-node --project tsconfig.g2t.json src/graph2tf/graph2tf.ts"
   },
   "eslintConfig": {
     "extends": "react-app"
