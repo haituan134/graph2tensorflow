@@ -67,7 +67,8 @@
   "lint-staged": {
     "*.(ts|tsx|json)": [
       "yarn prettier",
-      "yarn lint"
+      "yarn lint",
+      "git add"
     ]
   }
 }
