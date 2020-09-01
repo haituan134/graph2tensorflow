@@ -1,0 +1,75 @@
+{
+  "layers": [
+    {
+      "class_name": "InputLayer",
+      "config": {
+        "batch_input_shape": [null, 16],
+        "dtype": "float32",
+        "sparse": false,
+        "ragged": false
+      }
+    },
+    {
+      "class_name": "Dense",
+      "config": {
+        "trainable": true,
+        "dtype": "float32",
+        "units": 8,
+        "activation": "linear",
+        "use_bias": true,
+        "kernel_initializer": {
+          "class_name": "GlorotUniform",
+          "config": {}
+        },
+        "bias_initializer": {
+          "class_name": "Zeros",
+          "config": {}
+        },
+        "kernel_regularizer": null,
+        "bias_regularizer": null,
+        "activity_regularizer": null,
+        "kernel_constraint": null,
+        "bias_constraint": null
+      }
+    }
+  ],
+  "attribute": {
+    //thêm config
+    "regularizer": ["l1", "l2", "l1_l2"],
+    "activation": [
+      "elu",
+      "exponential",
+      "hard_sigmoid",
+      "linear",
+      "relu",
+      "selu",
+      "sigmoid",
+      "softmax",
+      "softplus",
+      "softsign",
+      "swish",
+      "tanh"
+    ],
+    //them config
+    "initializer": [
+      "constant",
+      "glorot_normal",
+      "glorot_uniform",
+      "he_normal",
+      "he_uniform",
+      "identity",
+      "lecun_normal",
+      "lecun_uniform",
+      "ones",
+      "orthogonal",
+      "random_normal",
+      "random_uniform",
+      "truncated_normal",
+      "variance_scaling",
+      "zeros"
+    ],
+    //them config
+    "constraint": ["max_norm", "min_max_norm", "non_neg", "radial_constraint", "unit_norm"],
+    "dtype": ["float16", "float32", "float64"]
+  }
+}
