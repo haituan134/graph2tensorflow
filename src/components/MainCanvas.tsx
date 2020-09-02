@@ -1,16 +1,18 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, MouseEvent } from "react";
 import createRawEngine, {
   DiagramEngine,
   DiagramModel,
   PortModelAlignment,
 } from "@projectstorm/react-diagrams";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
+import { Point } from "@projectstorm/geometry";
 import { Engine } from "../models/Engine";
 import { initialiseEngine, engine } from "../utils/globalEngine";
 import { SimplePortFactory } from "../models/SimplePortFactory";
 import { LayerPortModel } from "../models/LayerPortModel";
 import { LayerFactory } from "../models/LayerFactory";
 import { LayerModel } from "../models/LayerModel";
+import { useSetCurrentNode } from "../contexts/CurrentNodeContext";
 
 function createEngine() {
   let engine = createRawEngine();
@@ -43,11 +45,22 @@ function MainCanvas() {
     engine.addNode(newLayer);
   }
 
+  let setCurrentNode = useSetCurrentNode();
+  function handleClickOutsideOfAllNodes(e: MouseEvent) {
+    let target = e.target as HTMLElement;
+    if (target.closest(".layer")) {
+      // Click on a node, ignore
+      return;
+    }
+    setCurrentNode(null);
+  }
+
   return (
     <div
       className="canvas-wrapper"
       onDragOver={(event) => event.preventDefault()}
-      onDrop={handleDropEvent}>
+      onDrop={handleDropEvent}
+      onClick={handleClickOutsideOfAllNodes}>
       <CanvasWidget engine={engineRef.current} ref={canvasRef} className="canvas" />
     </div>
   );
