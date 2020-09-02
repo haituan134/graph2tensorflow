@@ -5,7 +5,6 @@ import createRawEngine, {
   PortModelAlignment,
 } from "@projectstorm/react-diagrams";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
-import { Point } from "@projectstorm/geometry";
 import { Engine } from "../models/Engine";
 import { initialiseEngine, engine } from "../utils/globalEngine";
 import { SimplePortFactory } from "../models/SimplePortFactory";
