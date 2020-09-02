@@ -36,10 +36,11 @@ function MainCanvas() {
   }, []);
 
   function handleDropEvent(event: React.DragEvent<HTMLDivElement>) {
+    let dropPoint = engineRef.current.getRelativeMousePoint(event);
     let rawNode = JSON.parse(event.dataTransfer.getData("new_node"));
     let newLayer = new LayerModel(rawNode);
+    newLayer.setPosition(dropPoint);
     engine.addNode(newLayer);
-    return;
   }
 
   return (
