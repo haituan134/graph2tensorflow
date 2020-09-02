@@ -16,7 +16,6 @@ class Engine {
     this.nodeSet = new Set();
     this.linkSet = new Set();
 
-    console.log("setModel");
     this.engine.setModel(this.model);
   }
 
@@ -26,21 +25,25 @@ class Engine {
 
   addNode<NodeType extends NodeModel>(node: NodeType) {
     this.model.addNode(node);
+    this.nodeSet.add(node);
     this.refreshCanvas();
   }
 
   removeNode<NodeType extends NodeModel>(node: NodeType) {
     this.model.removeNode(node);
+    this.nodeSet.delete(node);
     this.refreshCanvas();
   }
 
   addLink<LinkType extends LinkModel>(link: LinkType) {
     this.model.addLink(link);
+    this.linkSet.add(link);
     this.refreshCanvas();
   }
 
   removeLink<LinkType extends LinkModel>(link: LinkType) {
     this.model.removeLink(link);
+    this.linkSet.delete(link);
     this.refreshCanvas();
   }
 
