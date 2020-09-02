@@ -6,7 +6,7 @@
       {
         "class_name": "InputLayer",
         "config": {
-          "batch_input_shape": [null, 16],
+          "batch_input_shape": [16],
           "dtype": "float32",
           "sparse": false,
           "ragged": false,
@@ -22,14 +22,8 @@
           "units": 8,
           "activation": "linear",
           "use_bias": true,
-          "kernel_initializer": {
-            "class_name": "GlorotUniform",
-            "config": {}
-          },
-          "bias_initializer": {
-            "class_name": "Zeros",
-            "config": {}
-          },
+          "kernel_initializer": "GlorotUniform",
+          "bias_initializer": "Zeros",
           "kernel_regularizer": null,
           "bias_regularizer": null,
           "activity_regularizer": null,
