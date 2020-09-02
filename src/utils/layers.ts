@@ -1,7 +1,7 @@
 import layerData from "./data.json";
 import _ from "lodash";
 
-interface LayerInstance {
+export interface LayerInstance {
   class_name: string;
   config: Record<string, any>;
 }
