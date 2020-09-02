@@ -8,7 +8,8 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
   function attributeInputProps(attrName: string, attrValue: any) {
     return {
       name: attrName,
-      defaultValue: (currentNode.config[attrName] || "").toString(),
+      defaultValue:
+        currentNode.config[attrName] == null ? "" : currentNode.config[attrName].toString(),
       onChange: (event: React.ChangeEvent) => {
         const input = event.target as HTMLInputElement | HTMLSelectElement;
         let newValue: any = input.value;
@@ -27,7 +28,7 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
   function addLabelToInput(input: JSX.Element, attrName: string) {
     const label = attrName.replace(/-/g, " ");
     return (
-      <label key={attrName} className="params-editor__item">
+      <label key={currentNode.config.name + attrName} className="params-editor__item">
         <span className="params-editor__item-name">{label}</span>
         {input}
       </label>
