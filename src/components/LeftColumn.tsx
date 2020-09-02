@@ -17,8 +17,8 @@ function LeftColumn() {
   function handleDragLayer(event: DragEvent<HTMLDivElement>) {
     const layerName = (event.target as HTMLDivElement).textContent;
     if (layerName) {
-      const layer = layerInfos[layerName];
-      event.dataTransfer?.setData("new_node", JSON.stringify(layer));
+      const layerInstance = layerInfos[layerName].createOne();
+      event.dataTransfer?.setData("new_node", JSON.stringify(layerInstance));
     }
   }
 

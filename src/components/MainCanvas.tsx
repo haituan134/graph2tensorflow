@@ -18,7 +18,19 @@ function MainCanvas() {
     let engine = new Engine(engineRef.current, canvasRef.current!);
     initialiseEngine(engine);
   }, []);
-  return <CanvasWidget engine={engineRef.current} ref={canvasRef} className="canvas" />;
+
+  function handleDropEvent(event: React.DragEvent<HTMLDivElement>) {
+    return;
+  }
+
+  return (
+    <div
+      className="canvas-wrapper"
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={handleDropEvent}>
+      <CanvasWidget engine={engineRef.current} ref={canvasRef} className="canvas" />
+    </div>
+  );
 }
 
 export default MainCanvas;

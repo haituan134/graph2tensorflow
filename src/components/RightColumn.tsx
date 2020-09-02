@@ -5,19 +5,27 @@ import { useCurrentNode } from "../contexts/CurrentNodeContext";
 export default function RightColumn() {
   const currentNode = useCurrentNode();
   // const currentNode: { [key: string]: any } = {
-  //   class_name: "Dense",
+  //   class_name: "InputLayer",
   // };
-  if (!currentNode) return <aside></aside>;
+  if (!currentNode) return <aside>Nothing yet!</aside>;
 
   const nodeLayer = layerInfos[currentNode.class_name];
 
-  function attributeInputProps(attrName: string) {
+  function attributeInputProps(attrName: string, attrValue: any) {
     return {
       name: attrName,
       value: currentNode[attrName],
       onChange: (event: React.ChangeEvent) => {
         const input = event.target as HTMLInputElement | HTMLSelectElement;
-        currentNode[attrName] = input.value;
+        let newValue: any = input.value;
+        if (attrValue === "number") {
+          newValue = Number(input.value);
+        } else if (Array.isArray(attrValue) && typeof attrValue[0] === "boolean") {
+          newValue = input.value === "true" ? true : false;
+        } else if (!Array.isArray(attrValue)) {
+          newValue = JSON.parse(input.value);
+        }
+        currentNode[attrName] = newValue;
       },
     };
   }
@@ -33,7 +41,7 @@ export default function RightColumn() {
   }
 
   function attributeInput(attrName: string, attrValue: any) {
-    const inputProps = attributeInputProps(attrName);
+    const inputProps = attributeInputProps(attrName, attrValue);
     if (attrValue === "number") {
       return addLabelToInput(<input type="number" {...inputProps} />, attrName);
     } else if (Array.isArray(attrValue)) {
