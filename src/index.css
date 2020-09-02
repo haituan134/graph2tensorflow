@@ -50,3 +50,11 @@ code {
 .layer__port-output {
   text-align: right;
 }
+
+#root {
+  display: flex;
+}
+
+.canvas-wrapper {
+  flex-grow: 1;
+}
