@@ -1,15 +1,10 @@
 import React from "react";
-import { DefaultNodeModel } from "@projectstorm/react-diagrams";
 import { engine } from "../utils/globalEngine";
-
-let nodeCount = 0;
+import { LayerModel } from "../models/LayerModel";
 
 function LeftColumn() {
   function handleAddNode() {
-    let newNode = new DefaultNodeModel({
-      name: "Node " + ++nodeCount,
-      color: "red",
-    });
+    let newNode = new LayerModel();
     engine.addNode(newNode);
   }
   return (
