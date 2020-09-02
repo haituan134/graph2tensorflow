@@ -10,20 +10,12 @@
           "ragged": false
         }
       },
-      "attribute": [
-        {
-          "batch_input_shape": "*"
-        },
-        {
-          "dtype": ["float16", "float32", "float64"]
-        },
-        {
-          "sparse": [true, false]
-        },
-        {
-          "ragged": [true, false]
-        }
-      ]
+      "attribute": {
+        "batch_input_shape": "*",
+        "dtype": ["float16", "float32", "float64"],
+        "sparse": [true, false],
+        "ragged": [true, false]
+      }
     },
     {
       "layerValue": {
@@ -43,89 +35,65 @@
           "bias_constraint": null
         }
       },
-      "attribute": [
-        {
-          "trainable": [true, false]
-        },
-        {
-          "dtype": ["float16", "float32", "float64"]
-        },
-        {
-          "units": "1"
-        },
-        {
-          "activation": [
-            "elu",
-            "exponential",
-            "hard_sigmoid",
-            "linear",
-            "relu",
-            "selu",
-            "sigmoid",
-            "softmax",
-            "softplus",
-            "softsign",
-            "swish",
-            "tanh"
-          ]
-        },
-        {
-          "use_bias": [true, false]
-        },
-        {
-          "kernel_initializer": [
-            "Constant",
-            "GlorotNormal",
-            "GlorotUniform",
-            "HeNormal",
-            "HeUniform",
-            "Identity",
-            "LecunNormal",
-            "LecunUniform",
-            "Ones",
-            "Orthogonal",
-            "RandomNormal",
-            "RandomUniform",
-            "TruncatedNormal",
-            "VarianceScaling",
-            "Zeros"
-          ]
-        },
-        {
-          "bias_initializer": [
-            "Constant",
-            "GlorotNormal",
-            "GlorotUniform",
-            "HeNormal",
-            "HeUniform",
-            "Identity",
-            "LecunNormal",
-            "LecunUniform",
-            "Ones",
-            "Orthogonal",
-            "RandomNormal",
-            "RandomUniform",
-            "TruncatedNormal",
-            "VarianceScaling",
-            "Zeros"
-          ]
-        },
-        {
-          "kernel_regularizer": ["L1", "L2", "L1L2"]
-        },
-        {
-          "bias_regularizer": ["L1", "L2", "L1L2"]
-        },
-        {
-          "activity_regularizer": ["L1", "L2", "L1L2"]
-        },
-        {
-          "kernel_constraint": ["MaxNorm", "MinMaxNorm", "NonNeg", "RadialConstraint", "UnitNorm"]
-        },
-        {
-          "bias_constraint": ["MaxNorm", "MinMaxNorm", "NonNeg", "RadialConstraint", "UnitNorm"]
-        }
-      ]
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "units": "1",
+        "activation": [
+          "elu",
+          "exponential",
+          "hard_sigmoid",
+          "linear",
+          "relu",
+          "selu",
+          "sigmoid",
+          "softmax",
+          "softplus",
+          "softsign",
+          "swish",
+          "tanh"
+        ],
+        "use_bias": [true, false],
+        "kernel_initializer": [
+          "Constant",
+          "GlorotNormal",
+          "GlorotUniform",
+          "HeNormal",
+          "HeUniform",
+          "Identity",
+          "LecunNormal",
+          "LecunUniform",
+          "Ones",
+          "Orthogonal",
+          "RandomNormal",
+          "RandomUniform",
+          "TruncatedNormal",
+          "VarianceScaling",
+          "Zeros"
+        ],
+        "bias_initializer": [
+          "Constant",
+          "GlorotNormal",
+          "GlorotUniform",
+          "HeNormal",
+          "HeUniform",
+          "Identity",
+          "LecunNormal",
+          "LecunUniform",
+          "Ones",
+          "Orthogonal",
+          "RandomNormal",
+          "RandomUniform",
+          "TruncatedNormal",
+          "VarianceScaling",
+          "Zeros"
+        ],
+        "kernel_regularizer": ["L1", "L2", "L1L2"],
+        "bias_regularizer": ["L1", "L2", "L1L2"],
+        "activity_regularizer": ["L1", "L2", "L1L2"],
+        "kernel_constraint": ["MaxNorm", "MinMaxNorm", "NonNeg", "RadialConstraint", "UnitNorm"],
+        "bias_constraint": ["MaxNorm", "MinMaxNorm", "NonNeg", "RadialConstraint", "UnitNorm"]
+      }
     }
   ]
 }
