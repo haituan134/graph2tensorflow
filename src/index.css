@@ -13,3 +13,11 @@ code {
 .canvas {
   height: 100vh;
 }
+
+#root {
+  display: flex;
+}
+
+.canvas-wrapper {
+  flex-grow: 1;
+}
