@@ -1,20 +1,14 @@
 import React from "react";
-// import { useCurrentNode } from "../contexts/CurrentNodeContext";
-import { layerInfos } from "../utils/layers";
+import { layerInfos, LayerInstance } from "../utils/layers";
 import { useCurrentNode } from "../contexts/CurrentNodeContext";
-export default function RightColumn() {
-  const currentNode = useCurrentNode();
-  // const currentNode: { [key: string]: any } = {
-  //   class_name: "InputLayer",
-  // };
-  if (!currentNode) return <aside>Nothing yet!</aside>;
 
+function RightColumn({ data: currentNode }: { data: LayerInstance }) {
   const nodeLayer = layerInfos[currentNode.class_name];
 
   function attributeInputProps(attrName: string, attrValue: any) {
     return {
       name: attrName,
-      value: currentNode[attrName],
+      defaultValue: (currentNode.config[attrName] || "").toString(),
       onChange: (event: React.ChangeEvent) => {
         const input = event.target as HTMLInputElement | HTMLSelectElement;
         let newValue: any = input.value;
@@ -25,7 +19,7 @@ export default function RightColumn() {
         } else if (!Array.isArray(attrValue)) {
           newValue = JSON.parse(input.value);
         }
-        currentNode[attrName] = newValue;
+        currentNode.config[attrName] = newValue;
       },
     };
   }
@@ -69,3 +63,13 @@ export default function RightColumn() {
 
   return <aside>{attributeInputs()}</aside>;
 }
+
+function RightColumnWrapper() {
+  const currentNode = useCurrentNode();
+  if (!currentNode) {
+    return <aside>Nothing yet!</aside>;
+  }
+  return <RightColumn data={currentNode.data} />;
+}
+
+export default RightColumnWrapper;

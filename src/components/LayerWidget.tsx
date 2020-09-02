@@ -18,8 +18,8 @@ function LayerWidget({ node, engine }: LayerWidgetType) {
   }
 
   function handleUnselect() {
-    setIsHighlighted(false);
-    setCurrentNode(null);
+    // setIsHighlighted(false);
+    // setCurrentNode(null);
   }
 
   return (
@@ -28,7 +28,7 @@ function LayerWidget({ node, engine }: LayerWidgetType) {
       className={"layer" + (isHighlighted ? " active" : "")}
       onClick={handleSelect}
       onBlur={handleUnselect}>
-      <div className="layer-name">Node</div>
+      <div className="layer-name">{node.data.config.name}</div>
       <div className="layer__ports">
         <PortWidget port={node.getPort(PortModelAlignment.LEFT)!} engine={engine}>
           <div className="layer__port-input">Input</div>

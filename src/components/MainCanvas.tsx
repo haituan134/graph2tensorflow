@@ -6,10 +6,11 @@ import createRawEngine, {
 } from "@projectstorm/react-diagrams";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import { Engine } from "../models/Engine";
-import { initialiseEngine } from "../utils/globalEngine";
+import { initialiseEngine, engine } from "../utils/globalEngine";
 import { SimplePortFactory } from "../models/SimplePortFactory";
 import { LayerPortModel } from "../models/LayerPortModel";
 import { LayerFactory } from "../models/LayerFactory";
+import { LayerModel } from "../models/LayerModel";
 
 function createEngine() {
   let engine = createRawEngine();
@@ -35,6 +36,9 @@ function MainCanvas() {
   }, []);
 
   function handleDropEvent(event: React.DragEvent<HTMLDivElement>) {
+    let rawNode = JSON.parse(event.dataTransfer.getData("new_node"));
+    let newLayer = new LayerModel(rawNode);
+    engine.addNode(newLayer);
     return;
   }
 

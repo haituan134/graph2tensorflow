@@ -1,8 +1,9 @@
 import React, { Dispatch, SetStateAction, useContext } from "react";
+import { LayerModel } from "../models/LayerModel";
 
 type CurrentNodeContextType = {
-  currentNode: any;
-  setCurrentNode: Dispatch<SetStateAction<any>>;
+  currentNode: LayerModel | null;
+  setCurrentNode: Dispatch<SetStateAction<LayerModel | null>>;
 };
 
 let CurrentNodeContext = React.createContext<CurrentNodeContextType | undefined>(undefined);
