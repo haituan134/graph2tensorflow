@@ -2,20 +2,21 @@
   "layers": [
     {
       "layerValue": {
-        "class_name": "InputLayer",
+        "class_name": "Input",
         "config": {
-          "batch_input_shape": [16],
           "dtype": "float32",
           "sparse": false,
-          "ragged": false
+          "ragged": false,
+          "shape": [6]
         }
       },
       "attribute": {
-        "batch_input_shape": "*",
         "dtype": ["float16", "float32", "float64"],
         "sparse": [true, false],
-        "ragged": [true, false]
-      }
+        "ragged": [true, false],
+        "shape": "number_*"
+      },
+      "cnt_input": 0
     },
     {
       "layerValue": {
@@ -23,11 +24,11 @@
         "config": {
           "trainable": true,
           "dtype": "float32",
-          "units": 8,
-          "activation": "linear",
+          "units": 30,
+          "activation": "relu",
           "use_bias": true,
-          "kernel_initializer": "GlorotUniform",
-          "bias_initializer": "Zeros",
+          "kernel_initializer": "glorot_uniform",
+          "bias_initializer": "zeros",
           "kernel_regularizer": null,
           "bias_regularizer": null,
           "activity_regularizer": null,
@@ -38,7 +39,7 @@
       "attribute": {
         "trainable": [true, false],
         "dtype": ["float16", "float32", "float64"],
-        "units": "number",
+        "units": "number_1",
         "activation": [
           "elu",
           "exponential",
@@ -55,45 +56,76 @@
         ],
         "use_bias": [true, false],
         "kernel_initializer": [
-          "Constant",
-          "GlorotNormal",
-          "GlorotUniform",
-          "HeNormal",
-          "HeUniform",
-          "Identity",
-          "LecunNormal",
-          "LecunUniform",
-          "Ones",
-          "Orthogonal",
-          "RandomNormal",
-          "RandomUniform",
-          "TruncatedNormal",
-          "VarianceScaling",
-          "Zeros"
+          "constant",
+          "glorot_normal",
+          "glorot_uniform",
+          "he_normal",
+          "he_uniform",
+          "identity",
+          "lecun_normal",
+          "lecun_uniform",
+          "ones",
+          "orthogonal",
+          "random_normal",
+          "random_uniform",
+          "truncated_normal",
+          "variance_scaling",
+          "zeros"
         ],
         "bias_initializer": [
-          "Constant",
-          "GlorotNormal",
-          "GlorotUniform",
-          "HeNormal",
-          "HeUniform",
-          "Identity",
-          "LecunNormal",
-          "LecunUniform",
-          "Ones",
-          "Orthogonal",
-          "RandomNormal",
-          "RandomUniform",
-          "TruncatedNormal",
-          "VarianceScaling",
-          "Zeros"
+          "constant",
+          "glorot_normal",
+          "glorot_uniform",
+          "he_normal",
+          "he_uniform",
+          "identity",
+          "lecun_normal",
+          "lecun_uniform",
+          "ones",
+          "orthogonal",
+          "random_normal",
+          "random_uniform",
+          "truncated_normal",
+          "variance_scaling",
+          "zeros"
         ],
-        "kernel_regularizer": ["L1", "L2", "L1L2"],
-        "bias_regularizer": ["L1", "L2", "L1L2"],
-        "activity_regularizer": ["L1", "L2", "L1L2"],
-        "kernel_constraint": ["MaxNorm", "MinMaxNorm", "NonNeg", "RadialConstraint", "UnitNorm"],
-        "bias_constraint": ["MaxNorm", "MinMaxNorm", "NonNeg", "RadialConstraint", "UnitNorm"]
-      }
+        "kernel_regularizer": ["l1", "l2", "l1_l2", null],
+        "bias_regularizer": ["l1", "l2", "l1_l2", null],
+        "activity_regularizer": ["l1", "l2", "l1_l2", null],
+        "kernel_constraint": [
+          "max_norm",
+          "min_max_norm",
+          "non_neg",
+          "radial_constraint",
+          "unit_norm",
+          null
+        ],
+        "bias_constraint": [
+          "max_norm",
+          "min_max_norm",
+          "non_neg",
+          "radial_constraint",
+          "unit_norm",
+          null
+        ]
+      },
+      "cnt_input": 1
+    },
+    {
+      "layerValue": {
+        "class_name": "Concatenate",
+        "config": {
+          "trainable": true,
+          "dtype": "float32",
+          "axis": -1
+        }
+      },
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "axis": "number_1"
+      },
+      "cnt_input": -1
     }
   ]
 }
