@@ -39,6 +39,10 @@ code {
   box-shadow: 0 0 8px 3px #99f;
 }
 
+.layer.active .layer-name {
+  background: #335;
+}
+
 .layer:focus {
   outline: none;
 }

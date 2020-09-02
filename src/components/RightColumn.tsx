@@ -89,7 +89,7 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
 function RightColumnWrapper() {
   const currentNode = useCurrentNode();
   if (!currentNode) {
-    return <aside id="params-editor">Nothing yet!</aside>;
+    return <aside id="params-editor"></aside>;
   }
   return <RightColumn data={currentNode.data} />;
 }
