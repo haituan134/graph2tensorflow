@@ -1,175 +1,185 @@
-import Node from "./Node";
-import Graph from "./Graph";
-import graphJson from "./sample-graph.json";
-import { strict } from "assert";
+import Layer from "./Layer";
+import Model from "./Model";
+import modelJson from "./sample-model.json";
+import { stringify } from "querystring";
 
 let visiting: boolean[];
 let visited: boolean[];
 let cnt = 0;
 
-function checkInputLayer(g: Graph) {
-  g.nodes.forEach((layer, index) => {
-    if (layer.name == "Input" && g.edges[index].length == 0) return false;
-    if (layer.name != "Input" && g.edges[index].length != 0) return false;
+function checkInputLayer(model: Model) {
+  model.layers.forEach((layer, index) => {
+    if (layer.class_name == "InputLayer" && layer.inbound_nodes.length == 0) return false;
+    if (layer.class_name != "InputLayer" && layer.inbound_nodes.length != 0) return false;
   });
 
   return true;
 }
 
-function visit(u: number, edges: number[][], ans: number[]): boolean {
+function visit(u: number, model: Model, ans: number[]): boolean {
   visited[u] = true;
   visiting[u] = true;
-  edges[u].forEach((v) => {
+
+  model.layers[u].inbound_nodes.forEach((name) => {
+    let v = model.nameToIndex[name];
     if (!visited[v]) {
-      if (!visit(v, edges, ans)) return false;
+      if (!visit(v, model, ans)) return false;
     } else if (visiting[v]) {
       return false;
     }
   });
 
-  cnt -= 1;
-  ans[cnt] = u;
+  ans[cnt++] = u;
   visiting[u] = false;
   return true;
 }
 
-function topo(g: Graph): [boolean, number[]] {
-  visited = Array<boolean>(g.N);
-  visiting = Array<boolean>(g.N);
+function topo(model: Model): [boolean, number[]] {
+  visited = Array<boolean>(model.layers.length);
+  visiting = Array<boolean>(model.layers.length);
   visited.fill(false);
   visiting.fill(false);
-  cnt = g.N;
+  cnt = 0;
 
-  let ans: number[] = Array<number>(g.N);
-  for (let u = 0; u < g.N; u++) {
+  let ans: number[] = Array<number>(model.layers.length);
+  for (let u = 0; u < model.layers.length; u++) {
     if (!visited[u]) {
-      if (!visit(u, g.edges, ans)) return [false, []];
+      if (!visit(u, model, ans)) return [false, []];
     }
   }
 
   return [true, ans];
 }
 
-function assignNameLayer(g: Graph): [number, number, number] {
-  let cntInput = 0;
-  let cntOutput = 0;
-  let cntHidden = 0;
-
-  for (let index = 0; index < g.N; index++) {
-    if (g.nodes[index].name == "Input") {
-      g.nodes[index].varName = "input" + cntInput.toString();
-      cntInput += 1;
-    } else if (g.edges[index].length == 0) {
-      g.nodes[index].varName = "output" + cntOutput.toString();
-      cntOutput += 1;
-    } else {
-      g.nodes[index].varName = "hidden" + cntHidden.toString();
-      cntHidden += 1;
+function getAttributeLayer(layer: Layer): string {
+  let config: Record<string, any> = {};
+  let ans = "";
+  let cnt = 0;
+  for (let key in layer.config) {
+    if (
+      layer.config[key] != null &&
+      key != "name" &&
+      (key != "dtype" || layer.config[key] != "float32") &&
+      (key != "trainable" || layer.config[key] != true) &&
+      (key != "kernel_initializer" || layer.config[key] != "GlorotUniform") &&
+      (key != "activation" || layer.config[key] != "linear") &&
+      (key != "sparse" || layer.config[key] != false) &&
+      (key != "ragged" || layer.config[key] != false) &&
+      (key != "bias_initializer" || layer.config[key] != "Zeros") &&
+      (key != "use_bias" || layer.config[key] != true)
+    ) {
+      config[key] = layer.config[key];
     }
   }
 
-  return [cntInput, cntHidden, cntOutput];
+  // let attributeJSON = JSON.stringify(config);
+  return Object.entries(config)
+    .map(function ([key, value]) {
+      return `${key}=${JSON.stringify(value)}`;
+    })
+    .join(", ");
 }
 
-function getAttributeLayer(layer: Node): string {
-  let attributeJSON = JSON.stringify(layer.attributes);
-  return `${attributeJSON.slice(1, -1)}`;
+function computingLayer(layer: Layer): string {
+  return `(${layer.inbound_nodes.join(", ")})`;
 }
 
-function computingLayer(index: number, g: Graph): string {
-  let listNode: string[] = [];
-  g.rEdges[index].forEach((indexlayer) => {
-    listNode.push(g.nodes[indexlayer].varName);
-  });
-
-  return `(${listNode.join(", ")})`;
+function declareLayer(layer: Layer): string {
+  return `${layer.config.name} = keras.layer.${layer.class_name}(${getAttributeLayer(layer)})`;
 }
 
-function declareLayer(layer: Node): string {
-  return `${layer.varName} = keras.layer.${layer.name}(${getAttributeLayer(layer)})`;
+function checkOutputLayer(name: string, model: Model): boolean {
+  for (let index = 0; index < model.layers.length; index++) {
+    if (model.layers[index].inbound_nodes.includes(name)) {
+      return false;
+    }
+  }
+  return true;
 }
 
-function declareModel(cntInput: number, cntOutput: number): string {
+function declareModel(model: Model): string {
   let inputs: string[] = [];
   let outputs: string[] = [];
-  for (let i = 0; i < cntInput; i++) {
-    inputs.push(`input${i}`);
-  }
-  for (let i = 0; i < cntOutput; i++) {
-    outputs.push(`output${i}`);
-  }
+  model.layers.forEach((layer) => {
+    if (layer.class_name == "InputLayer") {
+      inputs.push(layer.config.name);
+    }
+  });
+
+  model.layers.forEach((layer) => {
+    if (checkOutputLayer(layer.config.name, model)) {
+      outputs.push(layer.config.name);
+    }
+  });
 
   return `model = keras.Model(inputs=[${inputs.join(", ")}], outputs=[${outputs.join(", ")}])`;
 }
 
-function toTensorflowCode(
-  g: Graph,
-  topoOrder: number[],
-  cntInput: number,
-  cntOutput: number,
-  style = 1,
-): string {
+function toTensorflowCode(model: Model, topoOrder: number[], style = 1): string {
   let ans = "";
   if (style == 1) {
     topoOrder.forEach((indexLayer) => {
-      if (g.nodes[indexLayer].name != "Input") {
-        ans += declareLayer(g.nodes[indexLayer]) + computingLayer(indexLayer, g) + "\n";
+      if (model.layers[indexLayer].class_name != "InputLayer") {
+        ans +=
+          declareLayer(model.layers[indexLayer]) + computingLayer(model.layers[indexLayer]) + "\n";
       } else {
-        ans += declareLayer(g.nodes[indexLayer]) + "\n";
+        ans += declareLayer(model.layers[indexLayer]) + "\n";
       }
     });
-    ans += declareModel(cntInput, cntOutput) + "\n";
+    ans += declareModel(model) + "\n";
   } else if (style == 2) {
     ans += "Class MyModel(keras.Model):\n";
 
     ans += "\tdef __init__(self):\n";
     ans += "\t\tsuper(MyModel, self).__init__()\n";
-    for (let index = 0; index < g.N; index++) {
-      ans += `\t\t${declareLayer(g.nodes[index])}\n`;
-    }
+    model.layers.forEach((layer) => {
+      ans += `\t\t${declareLayer(layer)}\n`;
+    });
 
     ans += "\tdef call(self, inputs):\n";
     let inputs: string[] = [];
-    for (let i = 0; i < cntInput; i++) {
-      inputs.push(`input${i}`);
-    }
+    model.layers.forEach((layer) => {
+      if (layer.class_name == "InputLayer") {
+        inputs.push(layer.config.name);
+      }
+    });
     ans += `\t\t${inputs.join(", ")} = inputs\n`;
 
     topoOrder.forEach((indexLayer) => {
-      let layer: Node = g.nodes[indexLayer];
-      if (layer.name != "Input") {
-        ans += `\t\t${layer.varName} = self.${layer.varName}${computingLayer(indexLayer, g)}\n`;
+      let layer: Layer = model.layers[indexLayer];
+      if (layer.class_name != "InputLayer") {
+        ans += `\t\t${layer.config.name} = self.${layer.config.name}${computingLayer(layer)}\n`;
       }
     });
 
     let outputs: string[] = [];
-    for (let i = 0; i < cntOutput; i++) {
-      outputs.push(`output${i}`);
-    }
+    model.layers.forEach((layer) => {
+      if (checkOutputLayer(layer.config.name, model)) {
+        outputs.push(layer.config.name);
+      }
+    });
+
     ans += `\t\treturn ${outputs.join(", ")}\n`;
   }
   return ans;
 }
 
-function graph2Tensorflow(g: Graph, style = 1): string {
+function Model2Tensorflow(model: Model, style = 1): string {
   let DAG: boolean;
   let topoOrder: number[];
 
-  [DAG, topoOrder] = topo(g);
+  [DAG, topoOrder] = topo(model);
   if (!DAG) {
     return "Error: Đồ thị không phải DAG";
   }
-  if (!checkInputLayer(g)) {
+  if (!checkInputLayer(model)) {
     return "Error: Layer xuất phát không phải layer input hoặc layer input có đầu vào";
   }
 
-  let cntInput: number;
-  let cntHidden: number;
-  let cntOutput: number;
-  [cntInput, cntHidden, cntOutput] = assignNameLayer(g);
-  return toTensorflowCode(g, topoOrder, cntInput, cntOutput, style);
+  return toTensorflowCode(model, topoOrder, style);
 }
 
-let g = new Graph(graphJson);
-console.log(graph2Tensorflow(g));
-console.log(graph2Tensorflow(g, 2));
+let model = new Model(modelJson);
+
+//console.log(Model2Tensorflow(model));
+console.log(Model2Tensorflow(model, 2));
