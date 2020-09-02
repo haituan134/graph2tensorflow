@@ -28,7 +28,7 @@ function LeftColumn() {
         />
       </label>
       {layerNames.map(function (layerName) {
-        if (!layerName.includes(search)) {
+        if (!layerName.toLowerCase().includes(search.toLowerCase())) {
           return null;
         }
         return (
