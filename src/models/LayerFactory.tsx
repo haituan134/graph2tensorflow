@@ -10,7 +10,7 @@ export class LayerFactory extends AbstractReactFactory<LayerModel, DiagramEngine
   }
 
   generateReactWidget(event: any): JSX.Element {
-    return <LayerWidget engine={this.engine} size={50} node={event.model} />;
+    return <LayerWidget engine={this.engine} node={event.model} />;
   }
 
   generateModel() {

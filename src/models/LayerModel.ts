@@ -11,5 +11,6 @@ export class LayerModel extends NodeModel<NodeModelGenerics & LayerModelGenerics
       type: "layer",
     });
     this.addPort(new LayerPortModel(PortModelAlignment.LEFT));
+    this.addPort(new LayerPortModel(PortModelAlignment.RIGHT));
   }
 }
