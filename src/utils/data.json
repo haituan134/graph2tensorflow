@@ -38,7 +38,7 @@
       "attribute": {
         "trainable": [true, false],
         "dtype": ["float16", "float32", "float64"],
-        "units": "1",
+        "units": "number",
         "activation": [
           "elu",
           "exponential",
