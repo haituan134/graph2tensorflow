@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, MouseEvent } from "react";
 import createRawEngine, {
   DiagramEngine,
   DiagramModel,
@@ -11,6 +11,7 @@ import { SimplePortFactory } from "../models/SimplePortFactory";
 import { LayerPortModel } from "../models/LayerPortModel";
 import { LayerFactory } from "../models/LayerFactory";
 import { LayerModel } from "../models/LayerModel";
+import { useSetCurrentNode } from "../contexts/CurrentNodeContext";
 
 function createEngine() {
   let engine = createRawEngine();
@@ -36,17 +37,29 @@ function MainCanvas() {
   }, []);
 
   function handleDropEvent(event: React.DragEvent<HTMLDivElement>) {
+    let dropPoint = engineRef.current.getRelativeMousePoint(event);
     let rawNode = JSON.parse(event.dataTransfer.getData("new_node"));
     let newLayer = new LayerModel(rawNode);
+    newLayer.setPosition(dropPoint);
     engine.addNode(newLayer);
-    return;
+  }
+
+  let setCurrentNode = useSetCurrentNode();
+  function handleClickOutsideOfAllNodes(e: MouseEvent) {
+    let target = e.target as HTMLElement;
+    if (target.closest(".layer")) {
+      // Click on a node, ignore
+      return;
+    }
+    setCurrentNode(null);
   }
 
   return (
     <div
       className="canvas-wrapper"
       onDragOver={(event) => event.preventDefault()}
-      onDrop={handleDropEvent}>
+      onDrop={handleDropEvent}
+      onClick={handleClickOutsideOfAllNodes}>
       <CanvasWidget engine={engineRef.current} ref={canvasRef} className="canvas" />
     </div>
   );
