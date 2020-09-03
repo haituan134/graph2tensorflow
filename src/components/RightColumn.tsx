@@ -8,12 +8,13 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
   function attributeInputProps(attrName: string, attrValue: any) {
     return {
       name: attrName,
-      defaultValue:
-        currentNode.config[attrName] == null ? "" : currentNode.config[attrName].toString(),
+      defaultValue: String(currentNode.config[attrName]),
       onChange: (event: React.ChangeEvent) => {
         const input = event.target as HTMLInputElement | HTMLSelectElement;
         let newValue: any = input.value;
-        if (attrValue === "number") {
+        if (input.value === "null") {
+          newValue = null;
+        } else if (attrValue === "number") {
           newValue = Number(input.value);
         } else if (Array.isArray(attrValue) && typeof attrValue[0] === "boolean") {
           newValue = input.value === "true" ? true : false;
@@ -42,11 +43,13 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
     } else if (Array.isArray(attrValue)) {
       return addLabelToInput(
         <select {...inputProps}>
-          {attrValue.map((value) => (
-            <option key={value} value={value}>
-              {String(value)}
-            </option>
-          ))}
+          {attrValue
+            .map((value) => String(value))
+            .map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
         </select>,
         attrName,
       );
