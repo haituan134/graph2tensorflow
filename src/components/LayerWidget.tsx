@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { DiagramEngine, PortWidget, PortModelAlignment } from "@projectstorm/react-diagrams";
 import { LayerModel } from "../models/LayerModel";
 import { useSetCurrentNode, useCurrentNode } from "../contexts/CurrentNodeContext";
@@ -32,6 +32,13 @@ function LayerWidget({ node, engine: rawEngine }: LayerWidgetType) {
     setCurrentNode(null);
   }
 
+  // State for force-updates
+  let [forceUpdateKey, setForceUpdateKey] = useState(0);
+  function handleAddPort() {
+    node.addNewInputPort();
+    setForceUpdateKey((p) => 1 - p);
+  }
+
   return (
     <div className={"layer" + (isHighlighted ? " active" : "")}>
       <div className="layer-name">
@@ -48,16 +55,31 @@ function LayerWidget({ node, engine: rawEngine }: LayerWidgetType) {
         </button>
       </div>
       <div className="layer__ports">
-        <PortWidget port={node.getPort(PortModelAlignment.LEFT)!} engine={rawEngine}>
-          <div className="layer__port layer__port-input">
-            {/* prettier-ignore */}
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" clipRule="evenodd" d="M15.67 11L12.09 7.41L13.5 6L19.5 12L13.5 18L12.08 16.59L15.67 13H1.5V11H15.67ZM22.5 18H20.5V6H22.5V18Z" fill="#fff" fillOpacity="0.54"/>
-            </svg>
-            inp
-          </div>
-        </PortWidget>
-        <PortWidget port={node.getPort(PortModelAlignment.RIGHT)!} engine={rawEngine}>
+        <div key={forceUpdateKey}>
+          {node.inPortList.map(function (port, index) {
+            return (
+              <PortWidget key={port.getName()} port={port} engine={rawEngine}>
+                <div className="layer__port layer__port-input">
+                  {/* prettier-ignore */}
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M15.67 11L12.09 7.41L13.5 6L19.5 12L13.5 18L12.08 16.59L15.67 13H1.5V11H15.67ZM22.5 18H20.5V6H22.5V18Z" fill="#fff" fillOpacity="0.54"/>
+                  </svg>
+                  inp {node.inPortList.length > 0 ? index + 1 : ""}
+                </div>
+              </PortWidget>
+            );
+          })}
+          {node.data.cnt_input === -1 && (
+            <div className="layer__port layer__port-input" onClick={handleAddPort}>
+              {/* prettier-ignore */}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="#fff" fillOpacity="0.54"/>
+              </svg>
+              add input
+            </div>
+          )}
+        </div>
+        <PortWidget port={node.outPort} engine={rawEngine}>
           <div className="layer__port layer__port-output">
             out
             {/* prettier-ignore */}

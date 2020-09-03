@@ -4,6 +4,7 @@ import _ from "lodash";
 export interface LayerInstance {
   class_name: string;
   config: Record<string, any>;
+  cnt_input: number;
 }
 
 interface LayerInfo {

@@ -9,13 +9,24 @@ export interface LayerModelGenerics {
 export class LayerModel extends NodeModel<NodeModelGenerics & LayerModelGenerics> {
   data: LayerInstance;
   setLayerName?: (layerName: string) => any;
+  inPortList: LayerPortModel[] = [];
+  outPort: LayerPortModel;
 
   constructor(rawNode: LayerInstance) {
     super({
       type: "layer",
     });
-    this.addPort(new LayerPortModel(PortModelAlignment.LEFT));
-    this.addPort(new LayerPortModel(PortModelAlignment.RIGHT));
+    for (let i = 0; i < rawNode.cnt_input; ++i) {
+      this.addNewInputPort();
+    }
+    this.outPort = new LayerPortModel(PortModelAlignment.RIGHT);
+    this.addPort(this.outPort);
     this.data = rawNode;
+  }
+
+  addNewInputPort() {
+    let port = new LayerPortModel(PortModelAlignment.LEFT);
+    this.inPortList.push(port);
+    this.addPort(port);
   }
 }
