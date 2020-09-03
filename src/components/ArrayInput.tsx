@@ -1,61 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useCurrentNodeArrayAttribute } from "../hooks/useCurrentNodeArrayAttribute";
 
 export default function ArrayInput({
-  values,
-  onElementChanged,
-  onPopLastElement,
-  length,
+  attributeName,
+  targetLength,
 }: {
-  values?: number[];
-  onElementChanged: any;
-  onPopLastElement?: any;
-  length: number;
+  attributeName: string;
+  targetLength: number;
 }) {
-  if (length !== -1 && values?.length !== length) throw Error("Must be same length");
-  const [defaultValues, setDefaultValues] = useState<number[]>([]);
+  let { values, set, push, pop } = useCurrentNodeArrayAttribute(attributeName, targetLength);
+  let isLengthFlexible = targetLength === -1;
 
-  useEffect(() => {
-    const tmp = [];
-    for (let i = 0; i < (values?.length || length); i++) {
-      tmp.push(values ? values[i] || 0 : 0);
-    }
-    setDefaultValues(tmp);
-  }, [values, length]);
-
-  function elementInput(value: number, index: number) {
-    return (
-      <input
-        key={index}
-        type="number"
-        defaultValue={value}
-        onChange={onElementChanged(value, index)}></input>
-    );
-  }
   return (
     <div className="array_input">
-      <div>{defaultValues.map((value, index) => elementInput(value, index))}</div>
-
       <div>
-        {length === -1 && (
-          <button
-            onClick={(event) => {
-              setDefaultValues((defaultValues) => defaultValues.concat([0]));
-              // TODO: Fix this illegal shit @ramu_kun
-              onElementChanged(0, defaultValues.length)({ target: { value: 0 } });
-            }}>
+        {values.map(function (value, index) {
+          return (
+            <input
+              key={index}
+              type="text"
+              pattern="[0-9]*"
+              inputMode="numeric"
+              value={value}
+              onChange={function (e) {
+                let newValue = parseInt(e.target.value) || 0;
+                set(index, newValue);
+              }}
+            />
+          );
+        })}
+      </div>
+      {isLengthFlexible && (
+        <div>
+          <button type="button" onClick={() => push(0)}>
             +
           </button>
-        )}
-        {length === -1 && defaultValues.length > 0 && (
-          <button
-            onClick={() => {
-              onPopLastElement();
-              setDefaultValues((defaultValues) => defaultValues.slice(0, -1));
-            }}>
-            -
-          </button>
-        )}
-      </div>
+          {values.length > 0 && (
+            <button type="button" onClick={pop}>
+              -
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

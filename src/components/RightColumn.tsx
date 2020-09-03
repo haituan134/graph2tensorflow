@@ -6,14 +6,6 @@ import ArrayInput from "./ArrayInput";
 function RightColumn({ data: currentNode }: { data: LayerInstance }) {
   const nodeLayer = layerInfos[currentNode.class_name];
 
-  function onElementChanged(attrName: string) {
-    return (_: number, index: number) => (event: React.ChangeEvent) => {
-      if (!currentNode.config[attrName]) currentNode.config[attrName] = [];
-      const attrValues = currentNode.config[attrName];
-      attrValues[index] = Number((event.target as HTMLInputElement).value);
-    };
-  }
-
   function attributeInputProps(attrName: string, attrValue: any) {
     return {
       name: attrName,
@@ -65,12 +57,7 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
     } else if (/number_./.test(attrValue)) {
       const length = parseInt((attrValue as string).split("_")[1]);
       return addLabelToInput(
-        <ArrayInput
-          values={currentNode.config[attrName]}
-          length={length}
-          onPopLastElement={() => currentNode.config[attrName].pop()}
-          onElementChanged={onElementChanged(attrName)}
-        />,
+        <ArrayInput attributeName={attrName} targetLength={length} />,
         attrName,
       );
     } else {
