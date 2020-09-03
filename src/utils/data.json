@@ -49,7 +49,7 @@
         "config": {
           "trainable": true,
           "dtype": "float32",
-          "axis": [3],
+          "axis": -1,
           "momentum": 0.99,
           "epsilon": 0.00001001,
           "center": true,
@@ -481,10 +481,7 @@
         "config": {
           "trainable": true,
           "dtype": "float32",
-          "padding": [
-            [3, 3],
-            [3, 3]
-          ],
+          "padding": [3, 3],
           "data_format": "channels_last"
         },
         "cnt_input": 1
