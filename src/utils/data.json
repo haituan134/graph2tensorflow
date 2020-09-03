@@ -2,29 +2,198 @@
   "layers": [
     {
       "layerValue": {
-        "class_name": "Input",
-        "config": {
-          "dtype": "float32",
-          "sparse": false,
-          "ragged": false,
-          "shape": [6]
-        }
-      },
-      "attribute": {
-        "dtype": ["float16", "float32", "float64"],
-        "sparse": [true, false],
-        "ragged": [true, false],
-        "shape": "number_*"
-      },
-      "cnt_input": 0
-    },
-    {
-      "layerValue": {
-        "class_name": "Dense",
+        "class_name": "Activation",
         "config": {
           "trainable": true,
           "dtype": "float32",
-          "units": 30,
+          "activation": "relu"
+        },
+        "cnt_input": 1
+      },
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "activation": [
+          "elu",
+          "exponential",
+          "hard_sigmoid",
+          "linear",
+          "relu",
+          "selu",
+          "sigmoid",
+          "softmax",
+          "softplus",
+          "softsign",
+          "swish",
+          "tanh"
+        ]
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "Add",
+        "config": {
+          "trainable": true,
+          "dtype": "float32"
+        },
+        "cnt_input": -1
+      },
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"]
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "BatchNormalization",
+        "config": {
+          "trainable": true,
+          "dtype": "float32",
+          "axis": [3],
+          "momentum": 0.99,
+          "epsilon": 0.00001001,
+          "center": true,
+          "scale": true,
+          "beta_initializer": "zeros",
+          "gamma_initializer": "ones",
+          "moving_mean_initializer": "zeros",
+          "moving_variance_initializer": "ones",
+          "beta_regularizer": null,
+          "gamma_regularizer": null,
+          "beta_constraint": null,
+          "gamma_constraint": null
+        },
+        "cnt_input": 1
+      },
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "axis": "number_1",
+        "momentum": "number",
+        "epsilon": "number",
+        "center": [true, false],
+        "scale": [true, false],
+        "beta_initializer": [
+          "constant",
+          "glorot_normal",
+          "glorot_uniform",
+          "he_normal",
+          "he_uniform",
+          "identity",
+          "lecun_normal",
+          "lecun_uniform",
+          "ones",
+          "orthogonal",
+          "random_normal",
+          "random_uniform",
+          "truncated_normal",
+          "variance_scaling",
+          "zeros",
+          null
+        ],
+        "gamma_initializer": [
+          "constant",
+          "glorot_normal",
+          "glorot_uniform",
+          "he_normal",
+          "he_uniform",
+          "identity",
+          "lecun_normal",
+          "lecun_uniform",
+          "ones",
+          "orthogonal",
+          "random_normal",
+          "random_uniform",
+          "truncated_normal",
+          "variance_scaling",
+          "zeros",
+          null
+        ],
+        "moving_mean_initializer": [
+          "constant",
+          "glorot_normal",
+          "glorot_uniform",
+          "he_normal",
+          "he_uniform",
+          "identity",
+          "lecun_normal",
+          "lecun_uniform",
+          "ones",
+          "orthogonal",
+          "random_normal",
+          "random_uniform",
+          "truncated_normal",
+          "variance_scaling",
+          "zeros",
+          null
+        ],
+        "moving_variance_initializer": [
+          "constant",
+          "glorot_normal",
+          "glorot_uniform",
+          "he_normal",
+          "he_uniform",
+          "identity",
+          "lecun_normal",
+          "lecun_uniform",
+          "ones",
+          "orthogonal",
+          "random_normal",
+          "random_uniform",
+          "truncated_normal",
+          "variance_scaling",
+          "zeros",
+          null
+        ],
+        "beta_regularizer": ["l1", "l2", "l1_l2", null],
+        "gamma_regularizer": ["l1", "l2", "l1_l2", null],
+        "beta_constraint": [
+          "max_norm",
+          "min_max_norm",
+          "non_neg",
+          "radial_constraint",
+          "unit_norm",
+          null
+        ],
+        "gamma_constraint": [
+          "max_norm",
+          "min_max_norm",
+          "non_neg",
+          "radial_constraint",
+          "unit_norm",
+          null
+        ]
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "Concatenate",
+        "config": {
+          "trainable": true,
+          "dtype": "float32",
+          "axis": -1
+        },
+        "cnt_input": -1
+      },
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "axis": "number"
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "Conv2D",
+        "config": {
+          "trainable": true,
+          "dtype": "float32",
+          "filters": 64,
+          "kernel_size": [3, 3],
+          "strides": [1, 1],
+          "padding": "same",
+          "data_format": "channels_last",
+          "dilation_rate": [1, 1],
+          "groups": 1,
           "activation": "relu",
           "use_bias": true,
           "kernel_initializer": "glorot_uniform",
@@ -34,12 +203,19 @@
           "activity_regularizer": null,
           "kernel_constraint": null,
           "bias_constraint": null
-        }
+        },
+        "cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
         "dtype": ["float16", "float32", "float64"],
-        "units": "number_1",
+        "filters": "number",
+        "kernel_size": "number_2",
+        "strides": "number_2",
+        "padding": ["valid", "same"],
+        "data_format": ["channels_last", "channels_first"],
+        "dilation_rate": "number_2",
+        "groups": "number",
         "activation": [
           "elu",
           "exponential",
@@ -70,7 +246,8 @@
           "random_uniform",
           "truncated_normal",
           "variance_scaling",
-          "zeros"
+          "zeros",
+          null
         ],
         "bias_initializer": [
           "constant",
@@ -87,7 +264,8 @@
           "random_uniform",
           "truncated_normal",
           "variance_scaling",
-          "zeros"
+          "zeros",
+          null
         ],
         "kernel_regularizer": ["l1", "l2", "l1_l2", null],
         "bias_regularizer": ["l1", "l2", "l1_l2", null],
@@ -108,24 +286,215 @@
           "unit_norm",
           null
         ]
-      },
-      "cnt_input": 1
+      }
     },
     {
       "layerValue": {
-        "class_name": "Concatenate",
+        "class_name": "Dense",
         "config": {
           "trainable": true,
           "dtype": "float32",
-          "axis": -1
-        }
+          "units": 30,
+          "activation": "relu",
+          "use_bias": true,
+          "kernel_initializer": "glorot_uniform",
+          "bias_initializer": "zeros",
+          "kernel_regularizer": null,
+          "bias_regularizer": null,
+          "activity_regularizer": null,
+          "kernel_constraint": null,
+          "bias_constraint": null
+        },
+        "cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
         "dtype": ["float16", "float32", "float64"],
-        "axis": "number_1"
+        "units": "number",
+        "activation": [
+          "elu",
+          "exponential",
+          "hard_sigmoid",
+          "linear",
+          "relu",
+          "selu",
+          "sigmoid",
+          "softmax",
+          "softplus",
+          "softsign",
+          "swish",
+          "tanh"
+        ],
+        "use_bias": [true, false],
+        "kernel_initializer": [
+          "constant",
+          "glorot_normal",
+          "glorot_uniform",
+          "he_normal",
+          "he_uniform",
+          "identity",
+          "lecun_normal",
+          "lecun_uniform",
+          "ones",
+          "orthogonal",
+          "random_normal",
+          "random_uniform",
+          "truncated_normal",
+          "variance_scaling",
+          "zeros",
+          null
+        ],
+        "bias_initializer": [
+          "constant",
+          "glorot_normal",
+          "glorot_uniform",
+          "he_normal",
+          "he_uniform",
+          "identity",
+          "lecun_normal",
+          "lecun_uniform",
+          "ones",
+          "orthogonal",
+          "random_normal",
+          "random_uniform",
+          "truncated_normal",
+          "variance_scaling",
+          "zeros",
+          null
+        ],
+        "kernel_regularizer": ["l1", "l2", "l1_l2", null],
+        "bias_regularizer": ["l1", "l2", "l1_l2", null],
+        "activity_regularizer": ["l1", "l2", "l1_l2", null],
+        "kernel_constraint": [
+          "max_norm",
+          "min_max_norm",
+          "non_neg",
+          "radial_constraint",
+          "unit_norm",
+          null
+        ],
+        "bias_constraint": [
+          "max_norm",
+          "min_max_norm",
+          "non_neg",
+          "radial_constraint",
+          "unit_norm",
+          null
+        ]
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "Dropout",
+        "config": {
+          "trainable": true,
+          "dtype": "float32",
+          "rate": 0.2,
+          "noise_shape": null,
+          "seed": null
+        },
+        "cnt_input": 1
       },
-      "cnt_input": -1
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "rate": "number",
+        "noise_shape": "number_-1",
+        "seed": null
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "Flatten",
+        "config": {
+          "trainable": true,
+          "dtype": "float32",
+          "data_format": "channels_last"
+        },
+        "cnt_input": 1
+      },
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "data_format": ["channels_last", "channels_first"]
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "GlobalAveragePooling2D",
+        "config": {
+          "trainable": true,
+          "dtype": "float32",
+          "data_format": "channels_last"
+        },
+        "cnt_input": 1
+      },
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "data_format": ["channels_last", "channels_first"]
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "Input",
+        "config": {
+          "dtype": "float32",
+          "sparse": false,
+          "ragged": false,
+          "shape": [6]
+        },
+        "cnt_input": 0
+      },
+      "attribute": {
+        "dtype": ["float16", "float32", "float64"],
+        "sparse": [true, false],
+        "ragged": [true, false],
+        "shape": "number_-1"
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "MaxPooling2D",
+        "config": {
+          "trainable": true,
+          "dtype": "float32",
+          "pool_size": [2, 2],
+          "padding": "valid",
+          "strides": [2, 2],
+          "data_format": "channels_last"
+        },
+        "cnt_input": 1
+      },
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "pool_size": "number_2",
+        "padding": ["valid", "same"],
+        "strides": "number_2",
+        "data_format": ["channels_last", "channels_first"]
+      }
+    },
+    {
+      "layerValue": {
+        "class_name": "ZeroPadding2D",
+        "config": {
+          "trainable": true,
+          "dtype": "float32",
+          "padding": [
+            [3, 3],
+            [3, 3]
+          ],
+          "data_format": "channels_last"
+        },
+        "cnt_input": 1
+      },
+      "attribute": {
+        "trainable": [true, false],
+        "dtype": ["float16", "float32", "float64"],
+        "padding": "number_2",
+        "data_format": ["channels_last", "channels_first"]
+      }
     }
   ]
 }
