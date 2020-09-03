@@ -51,7 +51,7 @@
           "dtype": "float32",
           "axis": -1,
           "momentum": 0.99,
-          "epsilon": 0.00001001,
+          "epsilon": 0.001,
           "center": true,
           "scale": true,
           "beta_initializer": "zeros",
@@ -187,14 +187,14 @@
         "config": {
           "trainable": true,
           "dtype": "float32",
-          "filters": 64,
-          "kernel_size": [3, 3],
+          "filters": 10,
+          "kernel_size": [10, 10],
           "strides": [1, 1],
-          "padding": "same",
+          "padding": "valid",
           "data_format": "channels_last",
           "dilation_rate": [1, 1],
           "groups": 1,
-          "activation": "relu",
+          "activation": "linear",
           "use_bias": true,
           "kernel_initializer": "glorot_uniform",
           "bias_initializer": "zeros",
@@ -294,8 +294,8 @@
         "config": {
           "trainable": true,
           "dtype": "float32",
-          "units": 30,
-          "activation": "relu",
+          "units": 10,
+          "activation": "linear",
           "use_bias": true,
           "kernel_initializer": "glorot_uniform",
           "bias_initializer": "zeros",
@@ -400,7 +400,7 @@
         "dtype": ["float16", "float32", "float64"],
         "rate": "number",
         "noise_shape": "number_-1",
-        "seed": null
+        "seed": "number"
       }
     },
     {
@@ -442,7 +442,7 @@
           "dtype": "float32",
           "sparse": false,
           "ragged": false,
-          "shape": [6]
+          "shape": [10]
         },
         "cnt_input": 0
       },
@@ -481,7 +481,7 @@
         "config": {
           "trainable": true,
           "dtype": "float32",
-          "padding": [3, 3],
+          "padding": [1, 1],
           "data_format": "channels_last"
         },
         "cnt_input": 1
