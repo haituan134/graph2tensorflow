@@ -1,6 +1,7 @@
 import React from "react";
 import { layerInfos, LayerInstance } from "../utils/layers";
 import { useCurrentNode } from "../contexts/CurrentNodeContext";
+import ArrayInput from "./ArrayInput";
 
 function RightColumn({ data: currentNode }: { data: LayerInstance }) {
   const nodeLayer = layerInfos[currentNode.class_name];
@@ -8,11 +9,13 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
   function attributeInputProps(attrName: string, attrValue: any) {
     return {
       name: attrName,
-      defaultValue: (currentNode.config[attrName] || "").toString(),
+      defaultValue: String(currentNode.config[attrName]),
       onChange: (event: React.ChangeEvent) => {
         const input = event.target as HTMLInputElement | HTMLSelectElement;
         let newValue: any = input.value;
-        if (attrValue === "number") {
+        if (input.value === "null") {
+          newValue = null;
+        } else if (attrValue === "number") {
           newValue = Number(input.value);
         } else if (Array.isArray(attrValue) && typeof attrValue[0] === "boolean") {
           newValue = input.value === "true" ? true : false;
@@ -27,7 +30,7 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
   function addLabelToInput(input: JSX.Element, attrName: string) {
     const label = attrName.replace(/-/g, " ");
     return (
-      <label key={attrName} className="params-editor__item">
+      <label key={currentNode.config.name + attrName} className="params-editor__item">
         <span className="params-editor__item-name">{label}</span>
         {input}
       </label>
@@ -41,12 +44,20 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
     } else if (Array.isArray(attrValue)) {
       return addLabelToInput(
         <select {...inputProps}>
-          {attrValue.map((value) => (
-            <option key={value} value={value}>
-              {String(value)}
-            </option>
-          ))}
+          {attrValue
+            .map((value) => String(value))
+            .map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
         </select>,
+        attrName,
+      );
+    } else if (/number_./.test(attrValue)) {
+      const length = parseInt((attrValue as string).split("_")[1]);
+      return addLabelToInput(
+        <ArrayInput attributeName={attrName} targetLength={length} />,
         attrName,
       );
     } else {
