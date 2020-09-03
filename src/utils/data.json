@@ -68,7 +68,7 @@
       "attribute": {
         "trainable": [true, false],
         "dtype": ["float16", "float32", "float64"],
-        "axis": "number_1",
+        "axis": "number",
         "momentum": "number",
         "epsilon": "number",
         "center": [true, false],

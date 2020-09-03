@@ -32,7 +32,7 @@ function MainCanvas() {
         new SimplePortFactory("layer", () => new LayerPortModel(PortModelAlignment.LEFT)),
       );
     rawEngine.getNodeFactories().registerFactory(new LayerFactory());
-
+    rawEngine.setMaxNumberPointsPerLink(0);
     let engine = new Engine(rawEngine, canvasRef.current!);
     initialiseEngine(engine);
   }, []);
