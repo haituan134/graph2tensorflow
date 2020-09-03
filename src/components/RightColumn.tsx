@@ -3,7 +3,13 @@ import { layerInfos, LayerInstance } from "../utils/layers";
 import { useCurrentNode } from "../contexts/CurrentNodeContext";
 import ArrayInput from "./ArrayInput";
 
-function RightColumn({ data: currentNode }: { data: LayerInstance }) {
+function RightColumn({
+  data: currentNode,
+  setLayerName,
+}: {
+  data: LayerInstance;
+  setLayerName?: (layerName: string) => any;
+}) {
   const nodeLayer = layerInfos[currentNode.class_name];
 
   function attributeInputProps(attrName: string, attrValue: any) {
@@ -87,7 +93,13 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
               key={currentNode.config.name}
               type="text"
               defaultValue={currentNode.config.name}
-              onChange={(e) => (currentNode.config.name = e.target.value)}
+              onChange={function (event) {
+                let newName = event.target.value;
+                currentNode.config.name = newName;
+                if (setLayerName) {
+                  setLayerName(newName);
+                }
+              }}
             />,
             "Layer name",
           )}
@@ -102,7 +114,7 @@ function RightColumnWrapper() {
   if (!currentNode) {
     return <aside id="params-editor"></aside>;
   }
-  return <RightColumn data={currentNode.data} />;
+  return <RightColumn data={currentNode.data} setLayerName={currentNode.setLayerName} />;
 }
 
 export default RightColumnWrapper;

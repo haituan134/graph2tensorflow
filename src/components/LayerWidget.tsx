@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { DiagramEngine, PortWidget, PortModelAlignment } from "@projectstorm/react-diagrams";
 import { LayerModel } from "../models/LayerModel";
 import { useSetCurrentNode, useCurrentNode } from "../contexts/CurrentNodeContext";
@@ -14,6 +14,15 @@ function LayerWidget({ node, engine: rawEngine }: LayerWidgetType) {
   let setCurrentNode = useSetCurrentNode();
   let isHighlighted = node.getID() === currentNode?.getID();
 
+  let [layerName, setLayerName] = useState(node.data.config.name);
+
+  useEffect(
+    function () {
+      node.setLayerName = setLayerName;
+    },
+    [node],
+  );
+
   function handleSelect() {
     setCurrentNode(node);
   }
@@ -26,7 +35,7 @@ function LayerWidget({ node, engine: rawEngine }: LayerWidgetType) {
   return (
     <div className={"layer" + (isHighlighted ? " active" : "")}>
       <div className="layer-name">
-        <span onClick={handleSelect}>{node.data.config.name}</span>
+        <span onClick={handleSelect}>{layerName}</span>
         <button
           type="button"
           onClick={handleDeleteLayer}
