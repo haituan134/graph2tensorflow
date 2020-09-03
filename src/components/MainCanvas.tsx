@@ -12,6 +12,7 @@ import { LayerPortModel } from "../models/LayerPortModel";
 import { LayerFactory } from "../models/LayerFactory";
 import { LayerModel } from "../models/LayerModel";
 import { useSetCurrentNode } from "../contexts/CurrentNodeContext";
+import { ArrowLinkFactory } from "../models/ArrowLinkFactory";
 
 function createEngine() {
   let engine = createRawEngine({ registerDefaultDeleteItemsAction: false });
@@ -31,6 +32,7 @@ function MainCanvas() {
       .registerFactory(
         new SimplePortFactory("layer", () => new LayerPortModel(PortModelAlignment.LEFT)),
       );
+    rawEngine.getLinkFactories().registerFactory(new ArrowLinkFactory());
     rawEngine.getNodeFactories().registerFactory(new LayerFactory());
     rawEngine.setMaxNumberPointsPerLink(0);
     let engine = new Engine(rawEngine, canvasRef.current!);

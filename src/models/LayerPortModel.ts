@@ -1,9 +1,5 @@
-import {
-  LinkModel,
-  PortModel,
-  DefaultLinkModel,
-  PortModelAlignment,
-} from "@projectstorm/react-diagrams";
+import { LinkModel, PortModel, PortModelAlignment } from "@projectstorm/react-diagrams";
+import { ArrowLinkModel } from "./ArrowLinkModel";
 
 export class LayerPortModel extends PortModel {
   portType: "in" | "out";
@@ -18,33 +14,7 @@ export class LayerPortModel extends PortModel {
   }
 
   createLinkModel(): LinkModel {
-    let link = new DefaultLinkModel();
-
-    function deleteLink() {
-      link.getSourcePort()?.removeLink(link);
-      link.getTargetPort()?.removeLink(link);
-      link.remove();
-    }
-
-    function dropListener(event: any) {
-      let { function: eventName, isSelected }: { function: string; isSelected: boolean } = event;
-      if (eventName !== "selectionChanged" || isSelected) {
-        return;
-      }
-      if (!link.getSourcePort() || !link.getTargetPort()) {
-        deleteLink();
-      }
-    }
-
-    link.getPoints().forEach(function (point) {
-      point.registerListener({
-        eventDidFire: dropListener,
-      });
-    });
-    link.registerListener({
-      eventDidFire: dropListener,
-    });
-    return link;
+    return new ArrowLinkModel();
   }
 
   canLinkToPort(port: LayerPortModel) {
