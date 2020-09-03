@@ -43,7 +43,7 @@ function RightColumn({ data: currentNode }: { data: LayerInstance }) {
         <select {...inputProps}>
           {attrValue.map((value) => (
             <option key={value} value={value}>
-              {value.toString()}
+              {String(value)}
             </option>
           ))}
         </select>,
