@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { DiagramEngine, PortWidget, PortModelAlignment } from "@projectstorm/react-diagrams";
+import React, { useState, useEffect } from "react";
+import { DiagramEngine, PortWidget } from "@projectstorm/react-diagrams";
 import { LayerModel } from "../models/LayerModel";
 import { useSetCurrentNode, useCurrentNode } from "../contexts/CurrentNodeContext";
 import { engine } from "../utils/globalEngine";
