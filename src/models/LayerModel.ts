@@ -8,6 +8,8 @@ export interface LayerModelGenerics {
 
 export class LayerModel extends NodeModel<NodeModelGenerics & LayerModelGenerics> {
   data: LayerInstance;
+  setLayerName?: (layerName: string) => any;
+
   constructor(rawNode: LayerInstance) {
     super({
       type: "layer",

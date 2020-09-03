@@ -18,7 +18,33 @@ export class LayerPortModel extends PortModel {
   }
 
   createLinkModel(): LinkModel {
-    return new DefaultLinkModel();
+    let link = new DefaultLinkModel();
+
+    function deleteLink() {
+      link.getSourcePort()?.removeLink(link);
+      link.getTargetPort()?.removeLink(link);
+      link.remove();
+    }
+
+    function dropListener(event: any) {
+      let { function: eventName, isSelected }: { function: string; isSelected: boolean } = event;
+      if (eventName !== "selectionChanged" || isSelected) {
+        return;
+      }
+      if (!link.getSourcePort() || !link.getTargetPort()) {
+        deleteLink();
+      }
+    }
+
+    link.getPoints().forEach(function (point) {
+      point.registerListener({
+        eventDidFire: dropListener,
+      });
+    });
+    link.registerListener({
+      eventDidFire: dropListener,
+    });
+    return link;
   }
 
   canLinkToPort(port: LayerPortModel) {
