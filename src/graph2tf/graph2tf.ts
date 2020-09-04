@@ -1,17 +1,17 @@
 import Layer from "./Layer";
 import Model from "./Model";
-import modelJson from "./sample-model.json";
-import { stringify } from "querystring";
+//import modelJson from "./sample-model.json";
 
 let visiting: boolean[];
 let visited: boolean[];
 let cnt = 0;
 
 function checkInputLayer(model: Model) {
-  model.layers.forEach((layer, index) => {
-    if (layer.class_name == "InputLayer" && layer.inbound_nodes.length == 0) return false;
-    if (layer.class_name != "InputLayer" && layer.inbound_nodes.length != 0) return false;
-  });
+  for (let index = 0; index < model.layers.length; index++) {
+    let layer = model.layers[index];
+    if (layer.class_name === "Input" && layer.inbound_nodes.length !== 0) return false;
+    if (layer.class_name !== "Input" && layer.inbound_nodes.length === 0) return false;
+  }
 
   return true;
 }
@@ -53,20 +53,18 @@ function topo(model: Model): [boolean, number[]] {
 
 function getAttributeLayer(layer: Layer): string {
   let config: Record<string, any> = {};
-  let ans = "";
-  let cnt = 0;
   for (let key in layer.config) {
     if (
-      layer.config[key] != null &&
-      key != "name" &&
-      (key != "dtype" || layer.config[key] != "float32") &&
-      (key != "trainable" || layer.config[key] != true) &&
-      (key != "kernel_initializer" || layer.config[key] != "GlorotUniform") &&
-      (key != "activation" || layer.config[key] != "linear") &&
-      (key != "sparse" || layer.config[key] != false) &&
-      (key != "ragged" || layer.config[key] != false) &&
-      (key != "bias_initializer" || layer.config[key] != "Zeros") &&
-      (key != "use_bias" || layer.config[key] != true)
+      layer.config[key] !== null &&
+      key !== "name" &&
+      (key !== "dtype" || layer.config[key] !== "float32") &&
+      (key !== "trainable" || layer.config[key] !== true) &&
+      (key !== "kernel_initializer" || layer.config[key] !== "GlorotUniform") &&
+      (key !== "activation" || layer.config[key] !== "linear") &&
+      (key !== "sparse" || layer.config[key] !== false) &&
+      (key !== "ragged" || layer.config[key] !== false) &&
+      (key !== "bias_initializer" || layer.config[key] !== "Zeros") &&
+      (key !== "use_bias" || layer.config[key] !== true)
     ) {
       config[key] = layer.config[key];
     }
@@ -81,7 +79,11 @@ function getAttributeLayer(layer: Layer): string {
 }
 
 function computingLayer(layer: Layer): string {
-  return `(${layer.inbound_nodes.join(", ")})`;
+  if (layer.inbound_nodes.length <= 1) {
+    return `(${layer.inbound_nodes[0]})`;
+  } else {
+    return `([${layer.inbound_nodes.join(", ")}])`;
+  }
 }
 
 function declareLayer(layer: Layer): string {
@@ -101,7 +103,7 @@ function declareModel(model: Model): string {
   let inputs: string[] = [];
   let outputs: string[] = [];
   model.layers.forEach((layer) => {
-    if (layer.class_name == "InputLayer") {
+    if (layer.class_name === "Input") {
       inputs.push(layer.config.name);
     }
   });
@@ -117,9 +119,9 @@ function declareModel(model: Model): string {
 
 function toTensorflowCode(model: Model, topoOrder: number[], style = 1): string {
   let ans = "";
-  if (style == 1) {
+  if (style === 1) {
     topoOrder.forEach((indexLayer) => {
-      if (model.layers[indexLayer].class_name != "InputLayer") {
+      if (model.layers[indexLayer].class_name !== "Input") {
         ans +=
           declareLayer(model.layers[indexLayer]) + computingLayer(model.layers[indexLayer]) + "\n";
       } else {
@@ -127,7 +129,7 @@ function toTensorflowCode(model: Model, topoOrder: number[], style = 1): string 
       }
     });
     ans += declareModel(model) + "\n";
-  } else if (style == 2) {
+  } else if (style === 2) {
     ans += "Class MyModel(keras.Model):\n";
 
     ans += "\tdef __init__(self):\n";
@@ -139,7 +141,7 @@ function toTensorflowCode(model: Model, topoOrder: number[], style = 1): string 
     ans += "\tdef call(self, inputs):\n";
     let inputs: string[] = [];
     model.layers.forEach((layer) => {
-      if (layer.class_name == "InputLayer") {
+      if (layer.class_name === "Input") {
         inputs.push(layer.config.name);
       }
     });
@@ -147,7 +149,7 @@ function toTensorflowCode(model: Model, topoOrder: number[], style = 1): string 
 
     topoOrder.forEach((indexLayer) => {
       let layer: Layer = model.layers[indexLayer];
-      if (layer.class_name != "InputLayer") {
+      if (layer.class_name !== "Input") {
         ans += `\t\t${layer.config.name} = self.${layer.config.name}${computingLayer(layer)}\n`;
       }
     });
@@ -173,13 +175,15 @@ function Model2Tensorflow(model: Model, style = 1): string {
     return "Error: Đồ thị không phải DAG";
   }
   if (!checkInputLayer(model)) {
-    return "Error: Layer xuất phát không phải layer input hoặc layer input có đầu vào";
+    return "Error: Layer xuất phát không phải layer input";
   }
 
   return toTensorflowCode(model, topoOrder, style);
 }
 
-let model = new Model(modelJson);
+//let model = new Model(modelJson);
 
 //console.log(Model2Tensorflow(model));
-console.log(Model2Tensorflow(model, 2));
+//console.log(Model2Tensorflow(model, 2));
+
+export { Model2Tensorflow };
