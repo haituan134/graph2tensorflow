@@ -1,5 +1,6 @@
 import { DiagramEngine, NodeModel, DiagramModel } from "@projectstorm/react-diagrams";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
+import { LayerModel } from "./LayerModel";
 
 class Engine {
   private engine: DiagramEngine;
@@ -46,6 +47,17 @@ class Engine {
 
   get nodeList() {
     return [...this.nodeSet];
+  }
+
+  convertToJson() {
+    return {
+      layers: this.nodeList.map((node) => {
+        const layerNode = node as LayerModel;
+        const layer = layerNode.data;
+        layer.inbound_nodes = layerNode.inboundLayerNames;
+        return layer;
+      }),
+    };
   }
 }
 

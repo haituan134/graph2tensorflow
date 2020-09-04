@@ -4,7 +4,7 @@ import createRawEngine, {
   DiagramModel,
   PortModelAlignment,
 } from "@projectstorm/react-diagrams";
-import { CanvasWidget, DeleteItemsAction } from "@projectstorm/react-canvas-core";
+import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import { Engine } from "../models/Engine";
 import { initialiseEngine, engine } from "../utils/globalEngine";
 import { SimplePortFactory } from "../models/SimplePortFactory";
@@ -12,10 +12,11 @@ import { LayerPortModel } from "../models/LayerPortModel";
 import { LayerFactory } from "../models/LayerFactory";
 import { LayerModel } from "../models/LayerModel";
 import { useSetCurrentNode } from "../contexts/CurrentNodeContext";
+import { CustomDeleteModelsAction } from "../models/DeleteAction";
 
 function createEngine() {
   let engine = createRawEngine({ registerDefaultDeleteItemsAction: false });
-  engine.getActionEventBus().registerAction(new DeleteItemsAction({ keyCodes: [46] }));
+  engine.getActionEventBus().registerAction(new CustomDeleteModelsAction());
   let model = new DiagramModel();
   engine.setModel(model);
   return engine;
@@ -52,6 +53,7 @@ function MainCanvas() {
       // Click on a node, ignore
       return;
     }
+    engine.nodeList.forEach((node) => node.setSelected(false));
     setCurrentNode(null);
   }
 
