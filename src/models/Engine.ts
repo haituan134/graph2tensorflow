@@ -16,7 +16,7 @@ class Engine {
     this.engine.setModel(this.model);
   }
 
-  private refreshCanvas() {
+  refreshCanvas() {
     this.canvas.forceUpdate();
   }
 
