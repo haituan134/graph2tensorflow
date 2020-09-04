@@ -4,6 +4,7 @@ import _ from "lodash";
 export interface LayerInstance {
   class_name: string;
   config: Record<string, any>;
+  inbound_nodes: string[];
 }
 
 interface LayerInfo {
@@ -20,8 +21,9 @@ export const layerInfos: LayerInfos = layerData.layers.reduce((map, layer) => {
     attributes: layer.attribute,
     count: 0,
     createOne() {
-      const instance = _.cloneDeep(layer.layerValue as LayerInstance);
+      const instance = _.cloneDeep(layer.layerValue) as any;
       instance.config.name = instance.class_name + "_" + this.count++;
+      instance.inbound_nodes = [];
       return instance;
     },
   };

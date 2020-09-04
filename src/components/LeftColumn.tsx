@@ -1,5 +1,6 @@
 import React, { DragEvent, useState } from "react";
 import { layerNames, layerInfos } from "../utils/layers";
+import { engine } from "../utils/globalEngine";
 
 function LeftColumn() {
   let [search, setSearch] = useState("");
@@ -37,6 +38,7 @@ function LeftColumn() {
           </div>
         );
       })}
+      <button onClick={() => console.log(engine.convertToJson())}>Convert</button>
     </aside>
   );
 }
