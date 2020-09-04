@@ -64,7 +64,19 @@ function getAttributeLayer(layer: Layer): string {
       (key !== "sparse" || layer.config[key] !== false) &&
       (key !== "ragged" || layer.config[key] !== false) &&
       (key !== "bias_initializer" || layer.config[key] !== "zeros") &&
-      (key !== "use_bias" || layer.config[key] !== true)
+      (key !== "use_bias" || layer.config[key] !== true) &&
+      (key !== "padding" || layer.config[key] !== "valid") &&
+      (key !== "data_format" || layer.config[key] !== "channels_last") &&
+      (layer.class_name !== "Conv2D" ||
+        key !== "strides" ||
+        layer.config[key][0] !== 1 ||
+        layer.config[key][0] !== 1) &&
+      (layer.class_name !== "MaxPooling2D" ||
+        key !== "strides" ||
+        layer.config[key][0] !== 2 ||
+        layer.config[key][0] !== 2) &&
+      (key !== "dilation_rate" || layer.config[key][0] !== 1 || layer.config[key][1] !== 1) &&
+      (key !== "groups" || layer.config[key] !== 1)
     ) {
       config[key] = layer.config[key];
     }
@@ -135,7 +147,9 @@ function toTensorflowCode(model: Model, topoOrder: number[], style = 1): string 
     ans += "\tdef __init__(self):\n";
     ans += "\t\tsuper(MyModel, self).__init__()\n";
     model.layers.forEach((layer) => {
-      ans += `\t\t${declareLayer(layer)}\n`;
+      if (layer.class_name !== "Input") {
+        ans += `\t\tself.${declareLayer(layer)}\n`;
+      }
     });
 
     ans += "\tdef call(self, inputs):\n";

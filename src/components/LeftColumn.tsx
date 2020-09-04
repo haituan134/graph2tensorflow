@@ -40,7 +40,7 @@ function LeftColumn() {
           </div>
         );
       })}
-      <button onClick={() => console.log(Model2Tensorflow(new Model(engine.convertToJson())))}>
+      <button onClick={() => console.log(Model2Tensorflow(new Model(engine.convertToJson()), 2))}>
         Convert
       </button>
     </aside>
