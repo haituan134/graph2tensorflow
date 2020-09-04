@@ -59,11 +59,11 @@ function getAttributeLayer(layer: Layer): string {
       key !== "name" &&
       (key !== "dtype" || layer.config[key] !== "float32") &&
       (key !== "trainable" || layer.config[key] !== true) &&
-      (key !== "kernel_initializer" || layer.config[key] !== "GlorotUniform") &&
+      (key !== "kernel_initializer" || layer.config[key] !== "glorot_uniform") &&
       (key !== "activation" || layer.config[key] !== "linear") &&
       (key !== "sparse" || layer.config[key] !== false) &&
       (key !== "ragged" || layer.config[key] !== false) &&
-      (key !== "bias_initializer" || layer.config[key] !== "Zeros") &&
+      (key !== "bias_initializer" || layer.config[key] !== "zeros") &&
       (key !== "use_bias" || layer.config[key] !== true)
     ) {
       config[key] = layer.config[key];
@@ -87,7 +87,7 @@ function computingLayer(layer: Layer): string {
 }
 
 function declareLayer(layer: Layer): string {
-  return `${layer.config.name} = keras.layer.${layer.class_name}(${getAttributeLayer(layer)})`;
+  return `${layer.config.name} = keras.layers.${layer.class_name}(${getAttributeLayer(layer)})`;
 }
 
 function checkOutputLayer(name: string, model: Model): boolean {
@@ -130,7 +130,7 @@ function toTensorflowCode(model: Model, topoOrder: number[], style = 1): string 
     });
     ans += declareModel(model) + "\n";
   } else if (style === 2) {
-    ans += "Class MyModel(keras.Model):\n";
+    ans += "class MyModel(keras.Model):\n";
 
     ans += "\tdef __init__(self):\n";
     ans += "\t\tsuper(MyModel, self).__init__()\n";

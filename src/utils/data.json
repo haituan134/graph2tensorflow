@@ -8,7 +8,8 @@
           "dtype": "float32",
           "activation": "relu"
         },
-        "cnt_input": 1
+        "cnt_input": 1,
+        "min_cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
@@ -36,7 +37,8 @@
           "trainable": true,
           "dtype": "float32"
         },
-        "cnt_input": -1
+        "cnt_input": -1,
+        "min_cnt_input": 2
       },
       "attribute": {
         "trainable": [true, false],
@@ -63,7 +65,8 @@
           "beta_constraint": null,
           "gamma_constraint": null
         },
-        "cnt_input": 1
+        "cnt_input": 1,
+        "min_cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
@@ -173,7 +176,8 @@
           "dtype": "float32",
           "axis": -1
         },
-        "cnt_input": -1
+        "cnt_input": -1,
+        "min_cnt_input": 2
       },
       "attribute": {
         "trainable": [true, false],
@@ -204,7 +208,8 @@
           "kernel_constraint": null,
           "bias_constraint": null
         },
-        "cnt_input": 1
+        "cnt_input": 1,
+        "min_cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
@@ -305,7 +310,8 @@
           "kernel_constraint": null,
           "bias_constraint": null
         },
-        "cnt_input": 1
+        "cnt_input": 1,
+        "min_cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
@@ -393,7 +399,8 @@
           "noise_shape": null,
           "seed": null
         },
-        "cnt_input": 1
+        "cnt_input": 1,
+        "min_cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
@@ -411,7 +418,8 @@
           "dtype": "float32",
           "data_format": "channels_last"
         },
-        "cnt_input": 1
+        "cnt_input": 1,
+        "min_cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
@@ -427,7 +435,8 @@
           "dtype": "float32",
           "data_format": "channels_last"
         },
-        "cnt_input": 1
+        "cnt_input": 1,
+        "min_cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
@@ -444,7 +453,8 @@
           "ragged": false,
           "shape": [10]
         },
-        "cnt_input": 0
+        "cnt_input": 0,
+        "min_cnt_input": 0
       },
       "attribute": {
         "dtype": ["float16", "float32", "float64"],
@@ -464,7 +474,8 @@
           "strides": [2, 2],
           "data_format": "channels_last"
         },
-        "cnt_input": 1
+        "cnt_input": 1,
+        "min_cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
@@ -484,7 +495,8 @@
           "padding": [1, 1],
           "data_format": "channels_last"
         },
-        "cnt_input": 1
+        "cnt_input": 1,
+        "min_cnt_input": 1
       },
       "attribute": {
         "trainable": [true, false],
