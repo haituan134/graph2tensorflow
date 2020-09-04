@@ -318,7 +318,7 @@ code {
   width: 100%;
 
   align-items: flex-start;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.4);
   display: flex;
   justify-content: center;
   padding-top: 100px;
@@ -334,9 +334,10 @@ code {
 }
 
 .code-modal {
-  background-color: #000;
-  border-radius: 5px;
+  background-color: #151718;
+  border-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.55) 0px 20px 68px;
+  overflow: hidden;
   position: relative;
   width: 900px;
   z-index: 1003;
@@ -361,4 +362,12 @@ code {
   height: 12px;
   margin-right: 6px;
   width: 12px;
+}
+
+.CodeMirror {
+  padding: 18px 14px;
+}
+
+.CodeMirror * {
+  font-family: monospace !important;
 }
