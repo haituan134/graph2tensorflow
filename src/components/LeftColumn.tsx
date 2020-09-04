@@ -1,5 +1,8 @@
 import React, { DragEvent, useState } from "react";
 import { layerNames, layerInfos } from "../utils/layers";
+import { engine } from "../utils/globalEngine";
+import { Model2Tensorflow } from "../graph2tf/graph2tf";
+import Model from "../graph2tf/Model";
 
 function LeftColumn() {
   let [search, setSearch] = useState("");
@@ -37,6 +40,9 @@ function LeftColumn() {
           </div>
         );
       })}
+      <button onClick={() => console.log(Model2Tensorflow(new Model(engine.convertToJson()), 2))}>
+        Convert
+      </button>
     </aside>
   );
 }

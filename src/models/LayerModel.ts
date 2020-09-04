@@ -1,4 +1,5 @@
 import { NodeModel, NodeModelGenerics, PortModelAlignment } from "@projectstorm/react-diagrams";
+import _ from "lodash";
 import { LayerPortModel } from "./LayerPortModel";
 import { LayerInstance } from "../utils/layers";
 import { engine } from "../utils/globalEngine";
@@ -40,5 +41,21 @@ export class LayerModel extends NodeModel<NodeModelGenerics & LayerModelGenerics
     });
     this.removePort(deletedPort);
     engine.refreshCanvas();
+  }
+
+  get inboundLayerNames(): string[] {
+    return _.flatten(
+      Object.values(this.getPorts()).map((port) => {
+        return Object.values(port.getLinks())
+          .map((link) => {
+            if (link.getTargetPort() === port) {
+              return (link.getSourcePort().getNode() as LayerModel).data.config.name;
+            } else {
+              return null;
+            }
+          })
+          .filter((name) => name);
+      }),
+    );
   }
 }
