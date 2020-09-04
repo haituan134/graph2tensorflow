@@ -69,7 +69,7 @@ code {
   padding-right: 10px;
 }
 
-.layer__delete-btn {
+.delete-btn {
   background: transparent;
   border: none;
   cursor: pointer;
@@ -81,7 +81,7 @@ code {
   width: 14px;
 }
 
-.layer__delete-btn:hover svg path {
+.delete-btn:hover svg path {
   fill: red;
 }
 
@@ -106,10 +106,17 @@ code {
   background-color: hsla(0, 0%, 100%, 0.2);
 }
 
-.layer__port-input svg {
+.layer__port-input > svg {
   margin-right: 4px;
 }
 
+.layer__port-input__port-name {
+  flex-grow: 1;
+}
+
+.layer__port-input__delete-btn {
+  display: flex;
+}
 .layer__port-output {
   justify-content: flex-end;
 }

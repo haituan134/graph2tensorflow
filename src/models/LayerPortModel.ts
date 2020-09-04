@@ -4,6 +4,7 @@ import {
   DefaultLinkModel,
   PortModelAlignment,
 } from "@projectstorm/react-diagrams";
+import { v4 as uuid } from "uuid";
 
 export class LayerPortModel extends PortModel {
   portType: "in" | "out";
@@ -11,7 +12,7 @@ export class LayerPortModel extends PortModel {
   constructor(alignment: PortModelAlignment) {
     super({
       type: "layer",
-      name: alignment,
+      name: uuid(),
       alignment,
     });
     this.portType = alignment === PortModelAlignment.LEFT ? "in" : "out";
@@ -54,10 +55,6 @@ export class LayerPortModel extends PortModel {
     }
     // An inPort can have at most 1 link
     if (Object.keys(port.links).length >= 1) {
-      return false;
-    }
-    // TODO: remove this to allow a layer output to be used in multiple places
-    if (Object.keys(this.links).length >= 2) {
       return false;
     }
     return true;
