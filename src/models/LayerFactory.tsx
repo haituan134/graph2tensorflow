@@ -18,6 +18,7 @@ export class LayerFactory extends AbstractReactFactory<LayerModel, DiagramEngine
       class_name: "",
       config: {},
       cnt_input: 0,
+      min_cnt_input: 0,
       inbound_nodes: new Array<string>(),
     });
   }

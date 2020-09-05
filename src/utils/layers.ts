@@ -5,6 +5,7 @@ export interface LayerInstance {
   class_name: string;
   config: Record<string, any>;
   cnt_input: number;
+  min_cnt_input: number;
   inbound_nodes: string[];
 }
 

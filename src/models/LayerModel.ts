@@ -18,7 +18,7 @@ export class LayerModel extends NodeModel<NodeModelGenerics & LayerModelGenerics
     super({
       type: "layer",
     });
-    for (let i = 0; i < rawNode.cnt_input; ++i) {
+    for (let i = 0; i < rawNode.min_cnt_input; ++i) {
       this.addNewInputPort();
     }
     this.outPort = new LayerPortModel(PortModelAlignment.RIGHT);
