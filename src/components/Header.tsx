@@ -30,6 +30,7 @@ function Header() {
 
   function importJSON(event: React.ChangeEvent<HTMLInputElement>) {
     const evFiles = event.target.files;
+    console.log(evFiles);
     if (evFiles && evFiles.length > 0) {
       const reader = new FileReader();
       reader.onload = onReaderLoad;

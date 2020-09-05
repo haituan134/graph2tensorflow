@@ -6,7 +6,9 @@ import {
 } from "@projectstorm/react-diagrams";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import { LayerModel } from "./LayerModel";
-import { LayerInstance } from "../utils/layers";
+import { LayerInstance, layerInfos } from "../utils/layers";
+import { link } from "fs";
+import { max } from "lodash";
 
 class Engine {
   private engine: DiagramEngine;
@@ -70,11 +72,14 @@ class Engine {
   createGraphFromJSON(graphJSON: Record<string, any>) {
     this.nodeList.forEach((node) => {
       this.nodeSet.delete(node);
-      this.model.removeNode(node);
+      this.removeNode(node);
     });
     const layers = graphJSON.layers as LayerInstance[];
     try {
       layers.forEach((layer) => {
+        const layerId = Number((layer.config.name as string).split("_")[1]);
+        const layerInfo = layerInfos[layer.class_name];
+        layerInfo.count = Math.max(layerId + 1, layerInfo.count);
         this.addNode(new LayerModel(layer));
       });
 
