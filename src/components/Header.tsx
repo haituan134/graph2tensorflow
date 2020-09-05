@@ -52,14 +52,14 @@ function Header() {
           <input type="file" id="header__import" accept="json" onChange={importJSON} />
           {/* prettier-ignore */}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fillRule="evenodd" clipRule="evenodd" d="M15 16.5V10.5H19L12 3.5L5 10.5H9V16.5H15ZM12 6.33L14.17 8.5H13V14.5H11V8.5H9.82999L12 6.33ZM19 20.5V18.5H5V20.5H19Z" fill="grey" fillOpacity="0.54"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M15 16.5V10.5H19L12 3.5L5 10.5H9V16.5H15ZM12 6.33L14.17 8.5H13V14.5H11V8.5H9.82999L12 6.33ZM19 20.5V18.5H5V20.5H19Z" fill="orange" />
           </svg>
           Import
         </label>
         <button type="button" className="header__action-button" onClick={exportJSON}>
           {/* prettier-ignore */}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fillRule="evenodd" clipRule="evenodd" d="M19 9.5H15V3.5H9V9.5H5L12 16.5L19 9.5ZM11 11.5V5.5H13V11.5H14.17L12 13.67L9.83002 11.5H11ZM19 20.5V18.5H5V20.5H19Z" fill="grey" fillOpacity="0.54"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M19 9.5H15V3.5H9V9.5H5L12 16.5L19 9.5ZM11 11.5V5.5H13V11.5H14.17L12 13.67L9.83002 11.5H11ZM19 20.5V18.5H5V20.5H19Z" fill="#337ab7" />
           </svg>
           Export
         </button>
