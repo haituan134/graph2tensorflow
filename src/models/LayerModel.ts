@@ -24,6 +24,7 @@ export class LayerModel extends NodeModel<NodeModelGenerics & LayerModelGenerics
     this.outPort = new LayerPortModel(PortModelAlignment.RIGHT);
     this.addPort(this.outPort);
     this.data = rawNode;
+    if (rawNode.position) this.setPosition(...rawNode.position);
   }
 
   addNewInputPort() {
