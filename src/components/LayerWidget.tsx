@@ -77,7 +77,7 @@ function LayerWidget({ node, engine: rawEngine }: LayerWidgetType) {
                     <path fillRule="evenodd" clipRule="evenodd" d="M15.67 11L12.09 7.41L13.5 6L19.5 12L13.5 18L12.08 16.59L15.67 13H1.5V11H15.67ZM22.5 18H20.5V6H22.5V18Z" fill="#fff" fillOpacity="0.54"/>
                   </svg>
                   <span className="layer__port-input__port-name">
-                    in {node.inPortList.length > 0 ? index + 1 : ""}
+                    in {node.inPortList.length > 1 || node.data.cnt_input === -1 ? index + 1 : ""}
                   </span>
                   {node.data.cnt_input === -1 && allowDeletion && (
                     <button
