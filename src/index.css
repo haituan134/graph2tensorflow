@@ -309,6 +309,20 @@ code {
   margin-right: 4px;
 }
 
+#header__import {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: -10;
+  top: -10;
+}
+
+.upoad {
+  color: #fff;
+  margin: 0;
+}
+
 .code-modal--wrapper {
   position: fixed;
   z-index: 1001;

@@ -1,6 +1,12 @@
-import { DiagramEngine, NodeModel, DiagramModel } from "@projectstorm/react-diagrams";
+import {
+  DiagramEngine,
+  NodeModel,
+  DiagramModel,
+  DefaultLinkModel,
+} from "@projectstorm/react-diagrams";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import { LayerModel } from "./LayerModel";
+import { LayerInstance, layerInfos } from "../utils/layers";
 
 class Engine {
   private engine: DiagramEngine;
@@ -55,9 +61,59 @@ class Engine {
         const layerNode = node as LayerModel;
         const layer = layerNode.data;
         layer.inbound_nodes = layerNode.inboundLayerNames;
+        layer.position = [layerNode.getPosition().x, layerNode.getPosition().y];
         return layer;
       }),
     };
+  }
+
+  createGraphFromJSON(graphJSON: Record<string, any>) {
+    this.nodeList.forEach((node) => {
+      this.nodeSet.delete(node);
+      this.removeNode(node);
+    });
+    const layers = graphJSON.layers as LayerInstance[];
+    try {
+      layers.forEach((layer) => {
+        const layerId = Number((layer.config.name as string).split("_")[1]);
+        const layerInfo = layerInfos[layer.class_name];
+        layerInfo.count = Math.max(layerId + 1, layerInfo.count);
+        this.addNode(new LayerModel(layer));
+      });
+
+      layers.forEach((layer) => {
+        const srcLayerNode = this.findLayerNodeWithName(layer.config.name);
+        if (srcLayerNode) {
+          const targetLayerNodes = layer.inbound_nodes
+            .map((nodeName) => {
+              return this.findLayerNodeWithName(nodeName);
+            })
+            .filter((node) => node);
+          targetLayerNodes.forEach((targetLayerNode, index) => {
+            const outPort = targetLayerNode?.outPort;
+            if (outPort) {
+              if (index >= srcLayerNode.inPortList.length) {
+                srcLayerNode.addNewInputPort();
+              }
+              const inPort = srcLayerNode.inPortList[index];
+              const link = new DefaultLinkModel();
+              link.setSourcePort(outPort);
+              link.setTargetPort(inPort);
+              this.model.addLink(link);
+            }
+          });
+        }
+      });
+      this.refreshCanvas();
+    } catch {
+      alert("Failed when trying to recreate graph from json file!");
+    }
+  }
+
+  findLayerNodeWithName(name: string): LayerModel | undefined {
+    return this.nodeList.find(
+      (node) => node instanceof LayerModel && node.data.config.name === name,
+    ) as LayerModel;
   }
 }
 

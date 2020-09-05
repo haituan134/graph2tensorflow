@@ -7,6 +7,7 @@ export interface LayerInstance {
   cnt_input: number;
   min_cnt_input: number;
   inbound_nodes: string[];
+  position?: [number, number];
 }
 
 interface LayerInfo {
