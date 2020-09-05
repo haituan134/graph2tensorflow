@@ -7,8 +7,6 @@ import {
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import { LayerModel } from "./LayerModel";
 import { LayerInstance, layerInfos } from "../utils/layers";
-import { link } from "fs";
-import { max } from "lodash";
 
 class Engine {
   private engine: DiagramEngine;
