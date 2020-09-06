@@ -1,5 +1,5 @@
-import Layer from "./Layer";
 import Model from "./Model";
+import { LayerInstance } from "../utils/layers";
 //import modelJson from "./sample-model.json";
 
 let visiting: boolean[];
@@ -51,7 +51,7 @@ function topo(model: Model): [boolean, number[]] {
   return [true, ans];
 }
 
-function getAttributeLayer(layer: Layer): string {
+function getAttributeLayer(layer: LayerInstance): string {
   let config: Record<string, any> = {};
   for (let key in layer.config) {
     if (
@@ -90,7 +90,7 @@ function getAttributeLayer(layer: Layer): string {
     .join(", ");
 }
 
-function computingLayer(layer: Layer): string {
+function computingLayer(layer: LayerInstance): string {
   if (layer.inbound_nodes.length <= 1) {
     return `(${layer.inbound_nodes[0]})`;
   } else {
@@ -98,7 +98,7 @@ function computingLayer(layer: Layer): string {
   }
 }
 
-function declareLayer(layer: Layer): string {
+function declareLayer(layer: LayerInstance): string {
   return `${layer.config.name} = keras.layers.${layer.class_name}(${getAttributeLayer(layer)})`;
 }
 
@@ -162,7 +162,7 @@ function toTensorflowCode(model: Model, topoOrder: number[], style = 1): string 
     ans += `\t\t${inputs.join(", ")} = inputs\n`;
 
     topoOrder.forEach((indexLayer) => {
-      let layer: Layer = model.layers[indexLayer];
+      let layer: LayerInstance = model.layers[indexLayer];
       if (layer.class_name !== "Input") {
         ans += `\t\t${layer.config.name} = self.${layer.config.name}${computingLayer(layer)}\n`;
       }
@@ -200,4 +200,4 @@ function Model2Tensorflow(model: Model, style = 1): string {
 //console.log(Model2Tensorflow(model));
 //console.log(Model2Tensorflow(model, 2));
 
-export { Model2Tensorflow };
+export { Model2Tensorflow, topo };
