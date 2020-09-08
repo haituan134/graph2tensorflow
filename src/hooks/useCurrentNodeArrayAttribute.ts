@@ -5,14 +5,14 @@ function useCurrentNodeArrayAttribute(attributeName: string, targetLength: numbe
   let currentNode = useCurrentNode();
   let isLengthFlexible = targetLength === -1;
 
-  let [values, setValues] = useState<number[]>(function () {
+  let [values, setValues] = useState<number[] | null>(function () {
     if (!currentNode) {
       return [];
     }
     if (!currentNode.data.config[attributeName]) {
-      if (isLengthFlexible) {
-        currentNode.data.config[attributeName] = [];
-      } else {
+      if (!isLengthFlexible) {
+        //   currentNode.data.config[attributeName] = [];
+        // } else {
         currentNode.data.config[attributeName] = Array.from({ length: targetLength }, () => 0);
       }
     }
@@ -30,7 +30,7 @@ function useCurrentNodeArrayAttribute(attributeName: string, targetLength: numbe
 
   let set = useCallback(function (index: number, value: number) {
     setValues(function (prev) {
-      if (index >= prev.length) {
+      if (!prev || index >= prev.length) {
         return prev;
       }
       let next = [...prev];
@@ -40,11 +40,11 @@ function useCurrentNodeArrayAttribute(attributeName: string, targetLength: numbe
   }, []);
 
   let push = useCallback(function (newValue: number) {
-    setValues((prev) => prev.concat(newValue));
+    setValues((prev) => (prev || []).concat(newValue));
   }, []);
 
   let pop = useCallback(function () {
-    setValues((prev) => prev.slice(0, -1));
+    setValues((prev) => prev && (prev.length > 1 ? prev.slice(0, -1) : null));
   }, []);
 
   return {

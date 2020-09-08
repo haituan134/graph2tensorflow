@@ -1,10 +1,11 @@
-import Layer from "./Layer";
-type GraphJson = {
-  layers: Layer[];
+import { LayerInstance } from "../utils/layers";
+
+export type GraphJson = {
+  layers: LayerInstance[];
 };
 
 class Model {
-  layers: Layer[];
+  layers: LayerInstance[];
   nameToIndex: Record<string, number>;
   constructor(json: GraphJson) {
     this.layers = json.layers;

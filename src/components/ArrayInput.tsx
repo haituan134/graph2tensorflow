@@ -14,7 +14,7 @@ export default function ArrayInput({
   return (
     <div className="array_input">
       <div>
-        {values.map(function (value, index) {
+        {(values || []).map(function (value, index) {
           return (
             <input
               key={index}
@@ -35,8 +35,13 @@ export default function ArrayInput({
           <button type="button" onClick={() => push(0)}>
             +
           </button>
-          {values.length > 0 && (
-            <button type="button" onClick={pop}>
+          {values && values.length > 0 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                pop();
+                return false;
+              }}>
               -
             </button>
           )}

@@ -6,7 +6,9 @@ import {
 } from "@projectstorm/react-diagrams";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import { LayerModel } from "./LayerModel";
-import { LayerInstance, layerInfos } from "../utils/layers";
+import { layerInfos } from "../utils/layers";
+import Model, { GraphJson } from "../graph2tf/Model";
+import { topo } from "../graph2tf/graph2tf";
 
 class Engine {
   private engine: DiagramEngine;
@@ -67,44 +69,78 @@ class Engine {
     };
   }
 
-  createGraphFromJSON(graphJSON: Record<string, any>) {
+  createGraphFromJSON(graphJSON: GraphJson) {
     this.nodeList.forEach((node) => {
       this.nodeSet.delete(node);
       this.removeNode(node);
     });
-    const layers = graphJSON.layers as LayerInstance[];
-    try {
-      layers.forEach((layer) => {
-        const layerId = Number((layer.config.name as string).split("_")[1]);
-        const layerInfo = layerInfos[layer.class_name];
-        layerInfo.count = Math.max(layerId + 1, layerInfo.count);
-        this.addNode(new LayerModel(layer));
-      });
 
-      layers.forEach((layer) => {
-        const srcLayerNode = this.findLayerNodeWithName(layer.config.name);
-        if (srcLayerNode) {
-          const targetLayerNodes = layer.inbound_nodes
-            .map((nodeName) => {
-              return this.findLayerNodeWithName(nodeName);
-            })
-            .filter((node) => node);
-          targetLayerNodes.forEach((targetLayerNode, index) => {
-            const outPort = targetLayerNode?.outPort;
+    try {
+      const model = new Model(graphJSON);
+      const [isDAG, topoOrder] = topo(model);
+
+      if (isDAG) {
+        const layerNodes: LayerModel[] = [];
+        let hasPosition = true;
+        model.layers.forEach((layer) => {
+          const layerId = Number((layer.config.name as string).split("_")[1]);
+          const layerInfo = layerInfos[layer.class_name];
+          layerInfo.count = Math.max(layerId + 1, layerInfo.count);
+          const layerNode = new LayerModel(layer);
+          if (!layer.position) hasPosition = false;
+          layerNodes.push(layerNode);
+          this.addNode(layerNode);
+        });
+
+        const visited = Array(model.layers.length);
+        const depthToCurrentY: { [key: number]: number } = {};
+        let maxDepth = 0;
+        const updatePositionCbs: ((maxDepth: number) => void)[] = [];
+        visited.fill(false);
+        const visitLayer = (depth: number) => (layerIndex: number) => {
+          if (visited[layerIndex]) return;
+          visited[layerIndex] = true;
+          const currentLayer = model.layers[layerIndex];
+          const currentLayerNode = layerNodes[layerIndex];
+          maxDepth = Math.max(depth, maxDepth);
+          if (!hasPosition) {
+            updatePositionCbs.push((maxDepth: number) => {
+              currentLayerNode.setPosition(
+                (currentLayerNode.width + 20) * maxDepth - (currentLayerNode.width + 20) * depth,
+                depthToCurrentY[depth] || (depthToCurrentY[depth] = 50),
+              );
+              depthToCurrentY[depth] += currentLayerNode.height + 20;
+            });
+          }
+
+          currentLayer.inbound_nodes.forEach((inboundLayerName, index) => {
+            const inboundLayerIndex = model.nameToIndex[inboundLayerName];
+            const outPort = layerNodes[inboundLayerIndex].outPort;
             if (outPort) {
-              if (index >= srcLayerNode.inPortList.length) {
-                srcLayerNode.addNewInputPort();
+              if (index >= currentLayerNode.inPortList.length) {
+                currentLayerNode.addNewInputPort();
               }
-              const inPort = srcLayerNode.inPortList[index];
+              const inPort = currentLayerNode.inPortList[index];
               const link = new DefaultLinkModel();
               link.setSourcePort(outPort);
               link.setTargetPort(inPort);
               this.model.addLink(link);
             }
+            visitLayer(depth + 1)(inboundLayerIndex);
           });
+        };
+        topoOrder.reverse().forEach(visitLayer(0));
+        this.refreshCanvas();
+        if (!hasPosition) {
+          setTimeout(() => {
+            updatePositionCbs.forEach((updatePositionCb) => updatePositionCb(maxDepth));
+            console.log(depthToCurrentY);
+            this.refreshCanvas();
+          }, 100);
         }
-      });
-      this.refreshCanvas();
+      } else {
+        throw new Error("Non DAG graph");
+      }
     } catch {
       alert("Failed when trying to recreate graph from json file!");
     }

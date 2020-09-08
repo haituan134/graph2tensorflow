@@ -62,9 +62,11 @@ function RightColumn({
       );
     } else if (/number_./.test(attrValue)) {
       const length = parseInt((attrValue as string).split("_")[1]);
-      return addLabelToInput(
-        <ArrayInput attributeName={attrName} targetLength={length} />,
-        attrName,
+      return (
+        <div key={currentNode.config.name + attrName} className="params-editor__item">
+          <span className="params-editor__item-name">{attrName.replace(/-/g, " ")}</span>
+          <ArrayInput attributeName={attrName} targetLength={length} />
+        </div>
       );
     } else {
       return addLabelToInput(<input type="text" {...inputProps} />, attrName);
