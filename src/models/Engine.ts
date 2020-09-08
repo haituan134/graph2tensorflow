@@ -6,7 +6,7 @@ import {
 } from "@projectstorm/react-diagrams";
 import { CanvasWidget } from "@projectstorm/react-canvas-core";
 import { LayerModel } from "./LayerModel";
-import { LayerInstance, layerInfos } from "../utils/layers";
+import { layerInfos } from "../utils/layers";
 import Model, { GraphJson } from "../graph2tf/Model";
 import { topo } from "../graph2tf/graph2tf";
 
@@ -107,7 +107,7 @@ class Engine {
             updatePositionCbs.push((maxDepth: number) => {
               currentLayerNode.setPosition(
                 (currentLayerNode.width + 20) * maxDepth - (currentLayerNode.width + 20) * depth,
-                depthToCurrentY[depth] || (depthToCurrentY[depth] = 0),
+                depthToCurrentY[depth] || (depthToCurrentY[depth] = 50),
               );
               depthToCurrentY[depth] += currentLayerNode.height + 20;
             });
@@ -139,7 +139,7 @@ class Engine {
           }, 100);
         }
       } else {
-        throw "Non DAG graph";
+        throw new Error("Non DAG graph");
       }
     } catch {
       alert("Failed when trying to recreate graph from json file!");
